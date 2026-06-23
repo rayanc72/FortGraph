@@ -2,9 +2,12 @@
 
 FortGraph is a lightweight toolkit for generating and exploring dependency graphs for Fortran codebases. The project was created to address the limited availability of open-source tools for parsing, visualizing, and understanding the structure of Fortran software.
 
-Download and open FortGraph.html in a browser to get started.
+It consists of two independent components:
 
+- Open `FortGraph.html` in a browser to get started with the interactive workspace.
+- Optionally use `fortran_to_workflow.py` to parse Fortran source files and generate a JSON dependency graph that can be loaded into `FortGraph.html`.
 
+The Python parser has no third-party dependencies, and the viewer does not require a backend server.
 
 <p align="center">
   <a href="assets/fortgraph-overview.png">
@@ -14,12 +17,6 @@ Download and open FortGraph.html in a browser to get started.
   </a>
 </p>
 
-It consists of two independent components:
-
-- `fortran_to_workflow.py` parses Fortran source files and generates a JSON dependency graph.
-- `FortGraph.html` loads the JSON into an interactive browser-based graph viewer.
-
-The Python parser has no third-party dependencies, and the viewer does not require a backend server.
 
 ## Features
 
