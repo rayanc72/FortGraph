@@ -431,86 +431,6 @@ Known limitations include:
 
 For compiler-grade semantic analysis, a full Fortran parser or compiler frontend would be required.
 
-## Troubleshooting
-
-### No Fortran source files found
-
-Confirm that:
-
-- the supplied path exists,
-- files use a recognized extension,
-- `--recursive` is used for nested source directories.
-
-Example:
-
-```bash
-python3 fortran_to_workflow.py src -r -o project.json
-```
-
-### The graph contains many external nodes
-
-An external node means the referenced module or procedure was not defined in the supplied inputs.
-
-Parse the complete source tree:
-
-```bash
-python3 fortran_to_workflow.py src -r -o project.json
-```
-
-### Function calls are missing
-
-Enable heuristic function inference:
-
-```bash
-python3 fortran_to_workflow.py src -r \
-  --infer-functions \
-  -o project.json
-```
-
-### The graph is visually crowded
-
-Try:
-
-- Dagre left-to-right,
-- force-directed layout,
-- hiding external nodes,
-- reducing text scale,
-- importing smaller source subsets,
-- using path-selection mode.
-
-### The HTML opens but external libraries fail to load
-
-If the page uses CDN-hosted scripts, verify that the browser has internet access.
-
-For a fully offline release, download the JavaScript dependencies and update the HTML to reference local copies.
-
-## Development
-
-The parser is dependency-free.
-
-A useful development check is:
-
-```bash
-python3 -m py_compile fortran_to_workflow.py
-```
-
-Generate the sample graph:
-
-```bash
-python3 fortran_to_workflow.py \
-  examples/basic/sample_project.f90 \
-  -o /tmp/fortgraph-example.json
-```
-
-Compare it with the committed example:
-
-```bash
-diff -u \
-  examples/basic/sample_project.json \
-  /tmp/fortgraph-example.json
-```
-
-Node and edge IDs are deterministic for a fixed parser version and fixed input order, but generated output may change as parser behavior evolves.
 
 ## Privacy
 
@@ -522,9 +442,7 @@ When FortGraph is hosted on a third-party platform, that platform's normal acces
 
 ## License
 
-Add the selected repository license here.
-
-A permissive license such as MIT or BSD-3-Clause is a common choice for a lightweight developer tool.
+The code is distributed with open-source MIT license.
 
 ## Contributing
 
