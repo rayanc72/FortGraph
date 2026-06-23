@@ -55,11 +55,16 @@ FortGraph/
 <table>
   <tr>
     <td align="center"><strong>Dark theme</strong></td>
+    <td align="center"><strong>Highlight workflow</strong></td>
   </tr>
   <tr>
     <td>
       <img src="assets/dark_theme.png"
            alt="FortGraph dark theme">
+    </td>
+    <td>
+      <img src="assets/highlight.png"
+           alt="Highlight a workflow">
     </td>
   </tr>
 </table>
