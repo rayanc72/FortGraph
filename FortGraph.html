@@ -1,0 +1,1231 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Fortran Dependency Tracker</title>
+<style>
+/* ── Theme tokens ─────────────────────────────────────────────────────────── */
+[data-theme="dark"]{
+  /* Modern midnight palette: blue / violet / rose, no dark green */
+  --bg-body:linear-gradient(145deg,#08111f 0%,#0b1629 54%,#111827 100%);
+  --bg-radial1:rgba(59,130,246,0.18); --bg-radial2:rgba(236,72,153,0.12);
+  --sidebar-bg:linear-gradient(180deg,rgba(12,20,36,0.96),rgba(8,15,28,0.99));
+  --panel-bg:rgba(15,23,42,0.86); --panel-border:rgba(148,163,184,0.20);
+  --line:rgba(148,163,184,0.20);
+  --text:#ffffff; --muted:#cbd5e1;
+  --input-bg:rgba(15,23,42,0.76); --input-border:rgba(148,163,184,0.28);
+  --item-hover:rgba(59,130,246,0.10); --item-sel-bg:rgba(59,130,246,0.17); --item-sel-border:rgba(96,165,250,0.52);
+  --card-bg:rgba(255,255,255,0.055); --notes-bg:rgba(255,255,255,0.04);
+  --block-border:rgba(148,163,184,0.18);
+  --tbtn-bg:rgba(15,23,42,0.86);
+  --legend-bg:rgba(15,23,42,0.88);
+  --cy-bg:transparent; --cy-label:#ffffff; --cy-edge-label:#e2e8f0; --cy-edge-text-bg:#08111f;
+  --cy-node-mod:#12335f; --cy-node-sub:#37246d; --cy-node-ext:#612044;
+  --accent-m:#60a5fa; --accent-s:#a78bfa; --accent-e:#f472b6;
+  --warm:#fb923c; --gold:#facc15; --red:#fb7185; --green:#34d399; --cyan:#60a5fa;
+  --path-color:#f472b6;
+  --cyan-soft:rgba(96,165,250,0.16); --cyan-soft2:rgba(96,165,250,0.11); --cyan-glow:rgba(96,165,250,0.30);
+  --gold-soft:rgba(250,204,21,0.13); --gold-soft2:rgba(250,204,21,0.10); --gold-border:rgba(250,204,21,0.42);
+  --gold-border2:rgba(250,204,21,0.66);
+  --red-soft:rgba(251,113,133,0.14);
+  --green-soft:rgba(52,211,153,0.11);
+  --path-soft:rgba(244,114,182,0.15); --path-soft2:rgba(244,114,182,0.18); --path-border:rgba(244,114,182,0.42); --path-border2:rgba(244,114,182,0.70);
+  --muted-soft:rgba(174,187,208,0.16);
+  --accent-m-soft:rgba(96,165,250,0.20); --accent-s-soft:rgba(167,139,250,0.20); --accent-e-soft:rgba(244,114,182,0.20);
+}
+[data-theme="light"]{
+  /* Clean near-white UI inspired by the mockup */
+  --bg-body:linear-gradient(145deg,#ffffff 0%,#f8fbff 54%,#ffffff 100%);
+  --bg-radial1:rgba(37,99,235,0.045); --bg-radial2:rgba(236,72,153,0.035);
+  --sidebar-bg:linear-gradient(180deg,rgba(255,255,255,0.98),rgba(249,251,255,0.98));
+  --panel-bg:rgba(255,255,255,0.94); --panel-border:rgba(15,23,42,0.11);
+  --line:rgba(15,23,42,0.10);
+  --text:#000000; --muted:#475569;
+  --input-bg:rgba(255,255,255,0.98); --input-border:rgba(148,163,184,0.38);
+  --item-hover:rgba(37,99,235,0.055);
+  --item-sel-bg:rgba(37,99,235,0.10); --item-sel-border:rgba(37,99,235,0.42);
+  --card-bg:rgba(255,255,255,0.86); --notes-bg:rgba(255,255,255,0.72);
+  --block-border:rgba(15,23,42,0.10);
+  --tbtn-bg:rgba(255,255,255,0.92);
+  --legend-bg:rgba(255,255,255,0.94);
+  --cy-bg:transparent; --cy-label:#000000; --cy-edge-label:#334155; --cy-edge-text-bg:#ffffff;
+  --cy-node-mod:#eef6ff; --cy-node-sub:#f4eeff; --cy-node-ext:#fff0f7;
+  --accent-m:#2563eb; --accent-s:#7c3aed; --accent-e:#db2777;
+  --warm:#ea580c; --gold:#ca8a04; --red:#dc2626; --green:#059669; --cyan:#2563eb;
+  --path-color:#db2777;
+  --cyan-soft:rgba(37,99,235,0.10); --cyan-soft2:rgba(37,99,235,0.075); --cyan-glow:rgba(37,99,235,0.18);
+  --gold-soft:rgba(202,138,4,0.10); --gold-soft2:rgba(202,138,4,0.08); --gold-border:rgba(202,138,4,0.32);
+  --gold-border2:rgba(202,138,4,0.52);
+  --red-soft:rgba(220,38,38,0.10);
+  --green-soft:rgba(5,150,105,0.08);
+  --path-soft:rgba(219,39,119,0.10); --path-soft2:rgba(219,39,119,0.13); --path-border:rgba(219,39,119,0.32); --path-border2:rgba(219,39,119,0.58);
+  --muted-soft:rgba(100,116,139,0.12);
+  --accent-m-soft:rgba(37,99,235,0.14); --accent-s-soft:rgba(124,58,237,0.14); --accent-e-soft:rgba(219,39,119,0.14);
+}
+
+/* ── Base ─────────────────────────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;
+  background:radial-gradient(circle at top left,var(--bg-radial1),transparent 28%),
+             radial-gradient(circle at top right,var(--bg-radial2),transparent 24%),
+             var(--bg-body);
+  color:var(--text);font-family:"IBM Plex Sans","Segoe UI","Apple Color Emoji","Segoe UI Emoji",sans-serif;
+}
+.shell{display:grid;grid-template-columns:minmax(0,1fr) 320px;height:100vh}
+#cy{width:100%;height:100%;background:var(--cy-bg)}
+.sidebar{border-left:1px solid var(--line);background:var(--sidebar-bg);
+  display:flex;flex-direction:column;overflow:hidden;z-index:2;
+  box-shadow:-18px 0 42px rgba(15,23,42,0.10);backdrop-filter:blur(18px)}
+.tabs{display:flex;border-bottom:1px solid var(--line);flex-shrink:0}
+.tab{flex:1;padding:10px 4px;font-size:11px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;cursor:pointer;background:none;border:none;
+  color:var(--muted);border-bottom:2px solid transparent;transition:color 150ms,border-color 150ms}
+.tab.on{color:var(--cyan);border-bottom-color:var(--cyan)}
+.tab:hover:not(.on){color:var(--text)}
+.body{flex:1;overflow-y:auto;padding:14px}
+
+/* ── Form ──────────────────────────────────────────────────────────────────── */
+.lbl{margin:12px 0 5px;color:var(--muted);font-size:10px;font-weight:700;
+     letter-spacing:.13em;text-transform:uppercase}
+.lbl:first-child{margin-top:0}
+.row{display:flex;gap:6px;margin-bottom:8px}
+.fi{flex:1;padding:8px 10px;border:1px solid var(--input-border);border-radius:10px;
+  background:var(--input-bg);color:var(--text);font:inherit;font-size:12px;box-shadow:0 1px 0 rgba(15,23,42,0.03)}
+.fi:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px var(--cyan-glow)}
+.fi::placeholder{color:var(--muted);opacity:.6}
+select.fi{cursor:pointer}
+textarea.fi{resize:vertical;min-height:62px;line-height:1.5}
+.btn{padding:8px 12px;border-radius:10px;border:1px solid var(--input-border);
+  background:var(--item-hover);color:var(--text);font:inherit;font-size:11px;font-weight:600;
+  cursor:pointer;white-space:nowrap;
+  transition:transform 140ms,border-color 140ms,background 140ms}
+.btn:hover{transform:translateY(-1px);border-color:var(--cyan);background:var(--cyan-soft)}
+.btn:active{transform:none}
+.btn-full{width:100%;text-align:left;margin-bottom:6px}
+.btn-warn:hover{border-color:var(--gold);background:var(--gold-soft);color:var(--gold)}
+.btn-danger:hover{border-color:var(--red);background:var(--red-soft);color:var(--red)}
+.msg{margin-top:7px;padding:7px 10px;border-radius:8px;
+  background:var(--cyan-soft2);color:var(--cyan);
+  font-size:11px;line-height:1.6;white-space:pre-wrap}
+.msg.ok{background:var(--green-soft);color:var(--green)}
+
+/* ── Nodes list ──────────────────────────────────────────────────────────── */
+.nli{display:flex;align-items:center;gap:7px;padding:6px 9px;border-radius:9px;
+  cursor:pointer;font-size:12px;border:1px solid transparent;margin-bottom:3px;transition:background 120ms}
+.nli:hover{background:var(--item-hover)}
+.nli.sel{background:var(--item-sel-bg);border-color:var(--item-sel-border)}
+.nli.in-path{background:var(--path-soft2);border-color:var(--path-border)}
+.nli.hidden-row{opacity:.5}
+.ndot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.nname{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
+.ntag{font-size:9px;padding:2px 5px;border-radius:4px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+.ntag-m{background:var(--accent-m-soft);color:var(--accent-m)}
+.ntag-s{background:var(--accent-s-soft);color:var(--accent-s)}
+.ntag-e{background:var(--accent-e-soft);color:var(--accent-e)}
+.ntag-h{background:var(--muted-soft);color:var(--muted)}
+.ntag-p{background:var(--path-soft);color:var(--path-color)}
+.hbtn{margin-left:2px;flex-shrink:0;background:none;border:none;cursor:pointer;
+  font-size:13px;padding:1px 4px;border-radius:4px;opacity:.4;transition:opacity 120ms}
+.hbtn:hover{opacity:1}
+
+/* ── Detail ──────────────────────────────────────────────────────────────── */
+.dcard{padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card-bg)}
+.dbadge{display:inline-block;margin-bottom:8px;padding:3px 8px;border-radius:999px;
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em}
+.dtitle{margin:0 0 7px;font-size:17px;line-height:1.1}
+.dblock{margin-top:10px;padding-top:10px;border-top:1px solid var(--block-border)}
+.dlbl{margin:0 0 6px;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{display:inline-flex;align-items:center;padding:3px 8px;border-radius:999px;
+  font-size:11px;cursor:pointer;transition:opacity 140ms}
+.chip:hover{opacity:.75}
+.dacts{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.hbanner{margin-bottom:8px;padding:6px 9px;border-radius:8px;
+  background:var(--gold-soft2);color:var(--gold);
+  border:1px solid var(--gold-border);font-size:11px}
+.path-banner{margin-bottom:8px;padding:6px 9px;border-radius:8px;
+  background:var(--path-soft);color:var(--path-color);
+  border:1px solid var(--path-border);font-size:11px}
+
+/* ── Notes ───────────────────────────────────────────────────────────────── */
+.nshell{margin-top:12px;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--notes-bg)}
+.nhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.nhead strong{font-size:13px}
+.saved-badge{margin-left:6px;color:var(--warm);font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+.nhelp{margin-top:6px;color:var(--muted);font-size:11px;line-height:1.45}
+
+/* ── Toolbar overlay ─────────────────────────────────────────────────────── */
+.toolbar{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;gap:6px;z-index:5}
+.tbtn{padding:8px 12px;border-radius:10px;border:1px solid var(--panel-border);
+  background:var(--tbtn-bg);color:var(--text);font:inherit;font-size:11px;cursor:pointer;
+  text-align:left;backdrop-filter:blur(12px);box-shadow:0 12px 34px rgba(15,23,42,0.10);
+  transition:transform 140ms,border-color 140ms,background 140ms}
+.tbtn:hover{transform:translateY(-1px);border-color:var(--cyan);background:var(--cyan-soft)}
+.tbtn.on{border-color:var(--gold-border2);
+  background:var(--gold-soft);color:var(--gold)}
+.tbtn.path-on{border-color:var(--path-border2);
+  background:var(--path-soft);color:var(--path-color)}
+.tbtn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.tbtn strong{display:block;font-size:11px;margin-bottom:1px}
+.tbtn span{color:var(--muted);font-size:10px}
+.layout-group{display:flex;flex-direction:column;gap:4px;
+  padding:10px;border-radius:12px;border:1px solid var(--panel-border);
+  background:var(--tbtn-bg);backdrop-filter:blur(12px);box-shadow:0 12px 34px rgba(15,23,42,0.10)}
+.layout-group-title{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:2px}
+.layout-row{display:flex;gap:4px}
+.lbtn{flex:1;padding:5px 8px;border-radius:7px;border:1px solid var(--panel-border);
+  background:transparent;color:var(--text);font:inherit;font-size:10px;cursor:pointer;
+  transition:background 130ms,border-color 130ms}
+.lbtn:hover{background:var(--cyan-soft);border-color:var(--cyan)}
+
+/* ── Legend ──────────────────────────────────────────────────────────────── */
+.legend{position:absolute;bottom:14px;left:14px;padding:12px 14px;border-radius:14px;
+  border:1px solid var(--panel-border);background:var(--legend-bg);backdrop-filter:blur(12px);font-size:11px;
+  box-shadow:0 14px 40px rgba(15,23,42,0.12)}
+.leg-row{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.leg-row:last-child{margin-bottom:0}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ── Range slider ───────────────────────────────────────────────────────── */
+input[type=range]{-webkit-appearance:none;appearance:none;background:var(--input-border);
+  border-radius:4px;height:4px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;
+  border-radius:50%;background:var(--cyan);cursor:pointer;border:none}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
+  background:var(--cyan);cursor:pointer;border:none}
+
+/* ── Theme toggle ────────────────────────────────────────────────────────── */
+.theme-btn{position:absolute;bottom:10px;right:10px;padding:6px 11px;border-radius:9px;
+  border:1px solid var(--panel-border);background:var(--tbtn-bg);color:var(--text);
+  font:inherit;font-size:11px;cursor:pointer;backdrop-filter:blur(8px);z-index:5;
+  transition:background 140ms,border-color 140ms}
+.theme-btn:hover{border-color:var(--cyan);background:var(--cyan-soft)}
+
+.stage{position:relative;overflow:hidden;height:100vh}
+@media(max-width:900px){
+  .shell{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;height:auto;min-height:100vh}
+  body{overflow:auto}
+  .stage{min-height:60vh}
+  .sidebar{border-left:none;border-top:1px solid var(--line)}
+}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js"></script>
+<script src="https://unpkg.com/cytoscape-dagre@2.5.0/cytoscape-dagre.js"></script>
+</head>
+<body>
+<div class="shell">
+  <div class="stage">
+    <div id="cy"></div>
+    <div class="toolbar" id="toolbar"></div>
+    <div class="legend" id="legend">
+      <div class="leg-row"><span class="leg-dot" style="background:var(--accent-m)"></span>🧩 Module</div>
+      <div class="leg-row"><span class="leg-dot" style="background:var(--accent-s)"></span>⚙️ Subroutine</div>
+      <div class="leg-row"><span class="leg-dot" style="background:var(--accent-e)"></span>📦 External</div>
+      <div class="leg-row"><span class="leg-dot" style="background:var(--path-color)"></span>Path selection</div>
+    </div>
+    <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">☀ Light</button>
+  </div>
+  <aside class="sidebar">
+    <div class="tabs" id="tabs"></div>
+    <div class="body" id="panel"></div>
+  </aside>
+</div>
+
+<script>
+'use strict';
+if (typeof cytoscapeDagre !== 'undefined') cytoscape.use(cytoscapeDagre);
+
+// ── Theme ─────────────────────────────────────────────────────────────────────
+let theme = localStorage.getItem('fdt-theme') || 'dark';
+function applyTheme(t) {
+  theme = t;
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('fdt-theme', t);
+  const btn = document.getElementById('theme-btn');
+  if (btn) btn.textContent = t === 'dark' ? '☀ Light' : '☾ Dark';
+  if (cy) {
+    cy.style(buildCyStyle());
+    syncGraph();
+    renderSidebar();
+    renderToolbar();
+  }
+}
+function toggleTheme() { applyTheme(theme === 'dark' ? 'light' : 'dark'); }
+// ── Storage ───────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'fortran-dep-tracker-v1';
+const HISTORY_LIMIT = 80;
+let undoStack = [], redoStack = [];
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return fresh();
+    const p = JSON.parse(raw);
+    return {
+      customNodes:   Array.isArray(p.customNodes)   ? p.customNodes   : [],
+      customEdges:   Array.isArray(p.customEdges)   ? p.customEdges   : [],
+      nodePositions: p.nodePositions || {},
+      hiddenNodeIds: Array.isArray(p.hiddenNodeIds) ? p.hiddenNodeIds : [],
+      perNode:       p.perNode  || {},
+      global:        p.global   || '',
+      focusMode:     Boolean(p.focusMode),
+      textScale:     typeof p.textScale==='number' ? p.textScale : 1.0,
+    };
+  } catch { return fresh(); }
+}
+function fresh() {
+  return { customNodes:[], customEdges:[], nodePositions:{}, hiddenNodeIds:[], perNode:{}, global:'', focusMode:false, textScale:1.0 };
+}
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function snapState() {
+  return JSON.stringify({ customNodes:state.customNodes, customEdges:state.customEdges,
+    nodePositions:state.nodePositions, hiddenNodeIds:state.hiddenNodeIds });
+}
+
+let state = loadState();
+
+function applyState(next, record=true) {
+  if (record) {
+    const prev = snapState();
+    const after = JSON.stringify({ customNodes:next.customNodes||state.customNodes,
+      customEdges:next.customEdges||state.customEdges,
+      nodePositions:next.nodePositions||state.nodePositions,
+      hiddenNodeIds:next.hiddenNodeIds||state.hiddenNodeIds });
+    if (prev !== after) {
+      undoStack.push(JSON.parse(prev));
+      if (undoStack.length > HISTORY_LIMIT) undoStack.shift();
+      redoStack = [];
+    }
+  }
+  state = { ...state, ...next };
+  saveState(); syncGraph(); renderSidebar();
+}
+
+function undo() {
+  if (!undoStack.length) return;
+  redoStack.push(JSON.parse(snapState()));
+  const prev = undoStack.pop();
+  state = { ...state, ...prev };
+  saveState(); syncGraph(); renderSidebar();
+}
+function redo() {
+  if (!redoStack.length) return;
+  undoStack.push(JSON.parse(snapState()));
+  const next = redoStack.pop();
+  state = { ...state, ...next };
+  saveState(); syncGraph(); renderSidebar();
+}
+
+function clearAllCache() {
+  if (!confirm('This will permanently delete ALL nodes, edges, notes, and cached data. Continue?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state = fresh();
+  undoStack = []; redoStack = [];
+  selectedId = null; pathSet.clear();
+  syncGraph(); renderSidebar();
+}
+
+// ── Path selection mode ───────────────────────────────────────────────────────
+let pathMode = false;
+let pathSet  = new Set(); // node IDs in current path selection
+
+function togglePathMode() {
+  pathMode = !pathMode;
+  if (!pathMode) { pathSet.clear(); selectedId = null; }
+  applyHighlight(); renderSidebar(); renderToolbar();
+}
+function clearPath() { pathSet.clear(); applyHighlight(); renderSidebar(); }
+
+// ── Keyboard shortcuts ────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  const tag = document.activeElement?.tagName;
+  const inInput = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+
+  // Undo / Redo
+  if ((e.metaKey || e.ctrlKey) && !e.altKey && e.key.toLowerCase() === 'z') {
+    e.preventDefault(); e.shiftKey ? redo() : undo(); return;
+  }
+  // Cmd/Ctrl+H — hide selected node
+  if ((e.metaKey || e.ctrlKey) && !e.altKey && e.key.toLowerCase() === 'h') {
+    e.preventDefault();
+    if (selectedId) toggleHide(selectedId);
+    return;
+  }
+  // Delete / Backspace — delete selected node (not when typing)
+  if ((e.key === 'Delete' || e.key === 'Backspace') && !inInput) {
+    if (selectedId) { deleteNode(selectedId); }
+    return;
+  }
+  // Escape — deselect / exit path mode
+  if (e.key === 'Escape') {
+    if (pathMode) { togglePathMode(); }
+    else { selectedId = null; applyHighlight(); renderSidebar(); }
+  }
+});
+
+// ── Cytoscape ─────────────────────────────────────────────────────────────────
+let selectedId = null;
+
+const cy = cytoscape({
+  container: document.getElementById('cy'),
+  style: buildCyStyle(),
+  elements: [],
+  layout: { name: 'preset' },
+  wheelSensitivity: 0.3,
+  minZoom: 0.06, maxZoom: 3,
+});
+
+function getThemeVar(v) {
+  return getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+}
+
+function buildCyStyle() {
+  const isDark = theme === 'dark';
+  const edgeLabel   = isDark ? '#ffffff' : '#000000';
+  const edgeLblBg   = isDark ? '#08111f' : '#ffffff';
+  const pathColor   = isDark ? '#f472b6' : '#db2777';
+  return [
+    { selector:'node', style:{
+      shape:'roundrectangle',
+      'background-color':'data(bgColor)',
+      'border-color':'data(accentColor)',
+      'border-width':1, 'border-opacity':0.24,
+      label:'data(label)',
+      'text-valign':'center','text-halign':'center',
+      'text-wrap':'wrap','text-overflow-wrap':'anywhere','text-max-width':'data(textW)',
+      'text-justification':'center',
+      'line-height':1.18,
+      'background-image':'data(iconImage)',
+      'background-fit':'none',
+      'background-width':'24px','background-height':'24px',
+      'background-position-x':'12px','background-position-y':'12px',
+      'background-repeat':'no-repeat',
+      'font-family':'"IBM Plex Sans","Apple Color Emoji","Segoe UI Emoji",sans-serif',
+      'font-size':'data(fontSize)','font-weight':650,
+      color:'data(labelColor)',
+      'text-outline-width':0,
+      width:'data(w)',height:'data(h)',padding:12,
+      'shadow-blur':18,
+      'shadow-color':isDark ? '#000000' : '#64748b',
+      'shadow-opacity':isDark ? 0.34 : 0.18,
+      'shadow-offset-x':0,'shadow-offset-y':6,
+      'transition-property':'border-color,border-width,border-opacity,shadow-blur,shadow-opacity,opacity',
+      'transition-duration':190,
+    }},
+    // Layered three-stop gradients create a softer, dimensional surface.
+    { selector:'node[nodeType="module"]', style:{
+      'background-fill':'linear-gradient',
+      'background-gradient-direction':'to-bottom-right',
+      'background-gradient-stop-colors': isDark ? '#244b86 #173563 #102847' : '#ffffff #edf5ff #d9e9ff',
+      'background-gradient-stop-positions':'0% 52% 100%',
+      'border-color':isDark ? '#79b8ff' : '#4f8fe8',
+    }},
+    { selector:'node[nodeType="subroutine"]', style:{
+      'background-fill':'linear-gradient',
+      'background-gradient-direction':'to-bottom-right',
+      'background-gradient-stop-colors': isDark ? '#60478f #3f2e6e #2d2254' : '#ffffff #f5efff #e8dcff',
+      'background-gradient-stop-positions':'0% 52% 100%',
+      'border-color':isDark ? '#bda2ff' : '#8b63d9',
+    }},
+    { selector:'node[nodeType="external"]', style:{
+      'background-fill':'linear-gradient',
+      'background-gradient-direction':'to-bottom-right',
+      'background-gradient-stop-colors': isDark ? '#8f3f68 #632b4b #461f38' : '#ffffff #fff0f7 #ffdce9',
+      'background-gradient-stop-positions':'0% 52% 100%',
+      'border-color':isDark ? '#ff9ac4' : '#dd5a91',
+      'border-style':'solid',
+    }},
+    { selector:'node.sel', style:{
+      'border-color':'data(accentColor)','border-width':2.5,'border-opacity':0.95,
+      'shadow-blur':34,'shadow-color':'data(accentColor)','shadow-opacity':0.52,
+      'shadow-offset-x':0,'shadow-offset-y':5,'z-index':20,
+    }},
+    { selector:'node.nbr', style:{
+      'border-color':'data(accentColor)','border-width':1.6,'border-opacity':0.62,
+      'shadow-blur':22,'shadow-color':'data(accentColor)','shadow-opacity':0.28,
+      'shadow-offset-x':0,'shadow-offset-y':5,'z-index':10,
+    }},
+    { selector:'node.in-path', style:{
+      'border-color':pathColor,'border-width':2.5,'border-opacity':0.95,
+      'shadow-blur':30,'shadow-color':pathColor,'shadow-opacity':0.48,
+      'shadow-offset-x':0,'shadow-offset-y':5,'z-index':18,
+    }},
+    { selector:'node.dim', style:{ opacity:0.15 }},
+    { selector:'edge', style:{
+      'curve-style':'bezier',
+      'target-arrow-shape':'triangle',
+      'target-arrow-color':'data(edgeColor)',
+      'line-color':'data(edgeColor)',
+      'line-opacity':0.74,
+      'target-arrow-fill':'filled','arrow-scale':1.1,
+      width:2.1, label:'data(label)',
+      'font-size':10,'font-family':'"IBM Plex Mono",monospace',
+      color: edgeLabel,
+      'text-background-color':edgeLblBg,
+      'text-background-opacity':0.85,
+      'text-background-padding':2,
+      'text-background-shape':'roundrectangle',
+      'transition-property':'opacity,width,line-opacity',
+      'transition-duration':160,
+    }},
+    { selector:'edge[isDashed="1"]', style:{'line-style':'dashed','line-dash-pattern':[7,4]}},
+    { selector:'edge.sel-edge', style:{'line-opacity':1,width:3,'z-index':15}},
+    { selector:'edge.path-edge', style:{
+      'line-color':pathColor,'target-arrow-color':pathColor,
+      'line-opacity':1,width:3,'z-index':16,
+    }},
+    { selector:'edge.dim', style:{ opacity:0.08 }},
+  ];
+}
+
+// ── Graph sync ────────────────────────────────────────────────────────────────
+const TYPE_ICON = { module: '🧩', subroutine: '⚙️', external: '📦' };
+function typeIcon(t){ return TYPE_ICON[t] || '•'; }
+function emojiDataUri(emoji) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text x="16" y="23" text-anchor="middle" font-size="22" font-family="Apple Color Emoji,Segoe UI Emoji,Noto Color Emoji,sans-serif">${emoji}</text></svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+function balancedNodeLabel(t, title, maxChars=24) {
+  const raw = String(title || '');
+  const parts = raw.split('_').filter(Boolean);
+
+  // Split unusually long tokens so no single segment can overflow.
+  const tokens = [];
+  parts.forEach((part, i) => {
+    const suffix = i < parts.length - 1 ? '_' : '';
+    const token = part + suffix;
+    if (token.length <= maxChars) tokens.push(token);
+    else {
+      for (let p = 0; p < token.length; p += maxChars)
+        tokens.push(token.slice(p, p + maxChars));
+    }
+  });
+
+  if (!tokens.length) return { label: '', lines: [''] };
+
+  // Greedy packing followed by a small balancing pass produces centered,
+  // similarly sized lines instead of a long first line and tiny last line.
+  const lines = [];
+  let line = '';
+  tokens.forEach(token => {
+    if (!line || (line + token).length <= maxChars) line += token;
+    else { lines.push(line); line = token; }
+  });
+  if (line) lines.push(line);
+
+  for (let i = lines.length - 1; i > 0; i--) {
+    const prevTokens = lines[i - 1].match(/[^_]+_?/g) || [lines[i - 1]];
+    while (prevTokens.length > 1) {
+      const moved = prevTokens[prevTokens.length - 1];
+      const candidatePrev = prevTokens.slice(0, -1).join('');
+      const candidateCurr = moved + lines[i];
+      if (candidateCurr.length > maxChars) break;
+      const oldDiff = Math.abs(lines[i - 1].length - lines[i].length);
+      const newDiff = Math.abs(candidatePrev.length - candidateCurr.length);
+      if (newDiff >= oldDiff) break;
+      prevTokens.pop();
+      lines[i - 1] = candidatePrev;
+      lines[i] = candidateCurr;
+    }
+  }
+
+  return { label: lines.join('\n'), lines };
+}
+function typeInitial(t){ return t === 'module' ? 'M' : t === 'subroutine' ? 'S' : 'E'; }
+
+function syncGraph() {
+  const hidden = new Set(state.hiddenNodeIds);
+  const degMap = {};
+  state.customNodes.forEach(n => { degMap[n.id] = 0; });
+  state.customEdges.forEach(e => {
+    if (!hidden.has(e.source) && !hidden.has(e.target)) {
+      if (degMap[e.source] !== undefined) degMap[e.source]++;
+      if (degMap[e.target] !== undefined) degMap[e.target]++;
+    }
+  });
+  const degs = Object.values(degMap);
+  const maxD = Math.max(1, ...degs), minD = Math.min(0, ...degs);
+
+  const isDark = theme === 'dark';
+  // Fallback bg colors (gradient is applied via Cytoscape type selectors in buildCyStyle)
+  const GRAD = {
+    module:     isDark ? { stop1:'#12335f' } : { stop1:'#eef6ff' },
+    subroutine: isDark ? { stop1:'#37246d' } : { stop1:'#f4eeff' },
+    external:   isDark ? { stop1:'#612044' } : { stop1:'#fff0f7' },
+  };
+  const AC = { module: isDark?'#60a5fa':'#2563eb', subroutine: isDark?'#a78bfa':'#7c3aed', external: isDark?'#f472b6':'#db2777' };
+  const LABEL_COLOR = isDark ? '#ffffff' : '#000000';
+  const ts = state.textScale || 1.0;
+
+  const wantNodes = new Set(), wantEdges = new Set();
+  cy.startBatch();
+
+  state.customNodes.forEach(n => {
+    if (hidden.has(n.id)) { const el=cy.getElementById(n.id); if(el.length) el.remove(); return; }
+    wantNodes.add(n.id);
+    const deg = degMap[n.id]||0;
+    const t = maxD===minD ? 0.5 : (deg-minD)/(maxD-minD);
+    const fontSize = Math.round((11+t*4) * ts);
+    const maxChars = Math.max(16, Math.round(25 / Math.max(1, ts * 0.72)));
+    const wrapped = balancedNodeLabel(n.data.nodeType, n.data.title, maxChars);
+    const rawLabel = wrapped.label;
+    const charWidth = fontSize * 0.59;
+    const longestLine = Math.max(...wrapped.lines.map(line => line.length));
+    const minW = Math.round((120+t*120) * Math.max(1, ts * 0.85 + 0.15));
+    const preferredW = Math.ceil(longestLine * charWidth + 44);
+    const w = Math.min(390, Math.max(minW, preferredW));
+    const textW = Math.max(96, w - 52);
+    const lineCount = wrapped.lines.length;
+    const h = Math.max(Math.round(48+t*28), Math.ceil(lineCount * fontSize * 1.55 + 38));
+    const accentColor = AC[n.data.nodeType]||AC.module;
+    const g = GRAD[n.data.nodeType]||GRAD.module;
+    const pos = state.nodePositions[n.id];
+    const el = cy.getElementById(n.id);
+    const bgColor = GRAD[n.data.nodeType] ? GRAD[n.data.nodeType].stop1 : '#07182a';
+    const nodeData = { label:rawLabel, nodeType:n.data.nodeType,
+      iconImage:emojiDataUri(typeIcon(n.data.nodeType)),
+      accentColor, bgColor, labelColor:LABEL_COLOR, w, h, textW, fontSize };
+    if (!el.length) {
+      cy.add({ group:'nodes', data:{ id:n.id, ...nodeData },
+        position: pos ? {x:pos.x,y:pos.y} : {x:Math.random()*600+80,y:Math.random()*400+60} });
+    } else {
+      el.data(nodeData);
+    }
+  });
+
+  cy.nodes().forEach(el => { if(!wantNodes.has(el.id())) el.remove(); });
+
+  state.customEdges.forEach(e => {
+    if (hidden.has(e.source)||hidden.has(e.target)) { const el=cy.getElementById(e.id); if(el.length) el.remove(); return; }
+    wantEdges.add(e.id);
+    const isDashed = e.data?.isDashed ? '1' : '0';
+    let ec = e.data?.isDashed ? (isDark?'#f472b6':'#db2777') : (isDark?'#60a5fa':'#2563eb');
+    if (e.style?.stroke) {
+      const s=e.style.stroke;
+      if (s.includes('149,224,141')||s==='#a78bfa') ec=isDark?'#a78bfa':'#7c3aed';
+    }
+    const el = cy.getElementById(e.id);
+    if (!el.length) {
+      cy.add({ group:'edges', data:{ id:e.id, source:e.source, target:e.target,
+        label:e.label||'', isDashed, edgeColor:ec } });
+    } else { el.data({ label:e.label||'', isDashed, edgeColor:ec }); }
+  });
+
+  cy.edges().forEach(el => { if(!wantEdges.has(el.id())) el.remove(); });
+  cy.endBatch();
+  applyHighlight();
+}
+
+function applyHighlight() {
+  cy.elements().removeClass('sel nbr dim sel-edge in-path path-edge');
+
+  if (pathMode && pathSet.size > 0) {
+    // highlight all path nodes and edges between them
+    const pathNodes = cy.nodes().filter(n => pathSet.has(n.id()));
+    const pathEdges = cy.edges().filter(e => pathSet.has(e.data('source')) && pathSet.has(e.data('target')));
+    const others = cy.nodes().not(pathNodes);
+    others.addClass('dim');
+    cy.edges().not(pathEdges).addClass('dim');
+    pathEdges.addClass('path-edge');
+    pathNodes.addClass('in-path');
+    return;
+  }
+
+  if (!selectedId || !cy.getElementById(selectedId).length) return;
+  const selNode = cy.getElementById(selectedId);
+  const connEdges = selNode.connectedEdges();
+  const nbrs = connEdges.connectedNodes().not(selNode);
+  cy.nodes().not(selNode).not(nbrs).addClass('dim');
+  cy.edges().not(connEdges).addClass('dim');
+  connEdges.addClass('sel-edge');
+  nbrs.addClass('nbr');
+  selNode.addClass('sel');
+}
+
+cy.on('dragfree','node',e=>{
+  const pos=e.target.position();
+  state.nodePositions={...state.nodePositions,[e.target.id()]:{x:pos.x,y:pos.y}};
+  saveState();
+});
+
+cy.on('tap','node',e=>{
+  const id=e.target.id();
+  if (pathMode) {
+    if (pathSet.has(id)) pathSet.delete(id); else pathSet.add(id);
+    applyHighlight(); renderSidebar(); return;
+  }
+  selectedId=id; applyHighlight(); renderSidebar();
+});
+cy.on('tap',e=>{
+  if (e.target===cy) {
+    if (pathMode) { pathSet.clear(); applyHighlight(); renderSidebar(); return; }
+    selectedId=null; applyHighlight(); renderSidebar();
+  }
+});
+
+// ── Layouts ───────────────────────────────────────────────────────────────────
+const LAYOUTS = {
+  'dagre-lr': { name:'dagre', rankDir:'LR', nodeSep:40, rankSep:120, edgeSep:20, animate:true, animationDuration:400 },
+  'dagre-tb': { name:'dagre', rankDir:'TB', nodeSep:40, rankSep:100, edgeSep:20, animate:true, animationDuration:400 },
+  'cose':     { name:'cose', animate:true, animationDuration:600, idealEdgeLength:150, nodeRepulsion:8000, padding:40 },
+  'breadth':  { name:'breadthfirst', directed:true, animate:true, animationDuration:400, spacingFactor:1.4, padding:40 },
+  'circle':   { name:'circle', animate:true, animationDuration:400, padding:40, spacingFactor:1.2 },
+  'concentric':{ name:'concentric', animate:true, animationDuration:400, padding:40, minNodeSpacing:30,
+                  concentric: n=>n.degree(), levelWidth: ()=>3 },
+  'grid':     { name:'grid', animate:true, animationDuration:400, padding:40, rows:undefined },
+};
+function runLayout(name) {
+  const opts = LAYOUTS[name];
+  if (!opts) return;
+  cy.layout(opts).run();
+  setTimeout(()=>{
+    const pos={};
+    cy.nodes().forEach(n=>{ pos[n.id()]={x:n.position('x'),y:n.position('y')}; });
+    state.nodePositions={...state.nodePositions,...pos}; saveState();
+  }, 700);
+}
+
+// ── Data helpers ──────────────────────────────────────────────────────────────
+function ensureModule(nodes,edges,title,msgs){
+  let n=nodes.find(x=>x.data.title.toLowerCase()===title.toLowerCase());
+  if(n){if(n.data.nodeType==='external'){n.data.nodeType='module';n.data.flag='Module';msgs&&msgs.push('↑ '+title);}return n;}
+  const mc=nodes.filter(x=>x.data.nodeType==='module').length;
+  const id='n-mod-'+Date.now()+'-'+Math.random().toString(36).slice(2,5);
+  const node={id,type:'workflow',position:{x:60+mc*200,y:40},data:{nodeType:'module',title,flag:'Module'}};
+  nodes.push(node); msgs&&msgs.push('+ module: '+title); return node;
+}
+function ensureSubroutine(nodes,edges,title,msgs){
+  let n=nodes.find(x=>x.data.title.toLowerCase()===title.toLowerCase());
+  if(n){if(n.data.nodeType==='external'){n.data.nodeType='subroutine';n.data.flag='Subroutine';msgs&&msgs.push('↑ '+title);}return n;}
+  const sc=nodes.filter(x=>x.data.nodeType==='subroutine').length;
+  const id='n-sub-'+Date.now()+'-'+Math.random().toString(36).slice(2,5);
+  const node={id,type:'workflow',position:{x:60+sc*200,y:160},data:{nodeType:'subroutine',title,flag:'Subroutine'}};
+  nodes.push(node); msgs&&msgs.push('+ sub: '+title); return node;
+}
+function ensureEdge(edges,source,target,label,isDashed,colorHint){
+  if(edges.find(e=>e.source===source&&e.target===target&&(e.label||'')===(label||''))) return false;
+  edges.push({id:'e-'+Date.now()+'-'+Math.random().toString(36).slice(2,5),
+    source,target,label:label||'',data:{isDashed:!!isDashed},
+    style:{stroke:colorHint||(isDashed?'#f2b766':'#a3b8d6')}});
+  return true;
+}
+
+// ── Sidebar ───────────────────────────────────────────────────────────────────
+let activeTab='add', nodeQuery='';
+function setTab(t){activeTab=t;renderSidebar();}
+const TABS=[['add','+ Add'],['nodes','Nodes'],['detail','Detail']];
+
+function renderSidebar(){
+  document.getElementById('tabs').innerHTML=TABS.map(([id,label])=>
+    `<button class="tab${activeTab===id?' on':''}" onclick="setTab('${id}')">${label}</button>`).join('');
+  const panel=document.getElementById('panel');
+  if(activeTab==='add')    panel.innerHTML=renderAddTab();
+  if(activeTab==='nodes')  panel.innerHTML=renderNodesTab();
+  if(activeTab==='detail') panel.innerHTML=renderDetailTab();
+  renderToolbar();
+}
+
+// ── Add tab ───────────────────────────────────────────────────────────────────
+function renderAddTab(){
+  const mods=state.customNodes.filter(n=>n.data.nodeType==='module');
+  const nonExt=state.customNodes.filter(n=>n.data.nodeType!=='external');
+  return `
+<p class="lbl">Module</p>
+<div class="row">
+  <input class="fi" id="mod-inp" placeholder="e.g. physics_mod" onkeydown="if(event.key==='Enter')addModule()"/>
+  <button class="btn" onclick="addModule()">Add</button>
+</div>
+<p class="lbl">Subroutine</p>
+<div class="row"><input class="fi" id="sub-inp" placeholder="e.g. compute_flux" onkeydown="if(event.key==='Enter')addSubroutine()"/></div>
+<div class="row">
+  <select class="fi" id="sub-par">
+    <option value="">— parent module (optional) —</option>
+    ${mods.map(n=>`<option value="${n.id}">${esc(n.data.title)}</option>`).join('')}
+  </select>
+</div>
+<div class="row"><button class="btn" style="flex:1" onclick="addSubroutine()">Add subroutine</button></div>
+<p class="lbl">Parse USE Statements</p>
+<textarea class="fi" id="use-txt" placeholder="USE physics_mod, ONLY: density&#10;USE io_mod&#10;USE constants_mod, ONLY: pi, hbar"></textarea>
+<div class="row" style="margin-top:6px">
+  <select class="fi" id="use-src">
+    <option value="">— attach to node —</option>
+    ${nonExt.map(n=>`<option value="${n.id}">${typeIcon(n.data.nodeType)} ${esc(n.data.title)}</option>`).join('')}
+  </select>
+  <button class="btn" onclick="parseUse()">Parse</button>
+</div>
+<div id="parse-msg"></div>
+<p class="lbl">Import / Export</p>
+<div class="row">
+  <button class="btn" style="flex:1" onclick="document.getElementById('json-import').click()">⇧ Import JSON</button>
+  <input id="json-import" type="file" accept="application/json,.json" hidden onchange="importJSONFile(this.files[0]);this.value=''"/>
+</div>
+<div class="row">
+  <button class="btn btn-warn" style="flex:1" onclick="exportJSON()">⇩ Export JSON</button>
+  <button class="btn btn-warn" style="flex:1" onclick="exportDOT()">⇩ Export DOT</button>
+</div>
+<div id="export-msg"></div>
+<p class="lbl">Danger Zone</p>
+<button class="btn btn-danger btn-full" onclick="clearAllCache()">Clear all cached data</button>`;
+}
+
+function addModule(){
+  const inp=document.getElementById('mod-inp');
+  const title=(inp?inp.value:'').trim(); if(!title) return;
+  const nodes=state.customNodes.map(n=>({...n,data:{...n.data}}));
+  const edges=[...state.customEdges]; const msgs=[];
+  const prev=nodes.length;
+  ensureModule(nodes,edges,title,msgs);
+  if(nodes.length===prev){showMsg('parse-msg','"'+title+'" already exists.');return;}
+  let wired=0;
+  const modNode=nodes.find(x=>x.data.title.toLowerCase()===title.toLowerCase());
+  nodes.forEach(n=>{
+    if(n.data.nodeType==='subroutine'&&n.data.parentName&&n.data.parentName.toLowerCase()===title.toLowerCase())
+      if(ensureEdge(edges,modNode.id,n.id,'contains',false,'#a78bfa')) wired++;
+  });
+  applyState({customNodes:nodes,customEdges:edges}); inp.value='';
+  if(wired) showMsg('parse-msg','Added "'+title+'" · wired '+wired+' sub(s).',true);
+}
+
+function addSubroutine(){
+  const inp=document.getElementById('sub-inp'),parEl=document.getElementById('sub-par');
+  const title=(inp?inp.value:'').trim(); if(!title) return;
+  const parentId=parEl?parEl.value:'';
+  const nodes=state.customNodes.map(n=>({...n,data:{...n.data}}));
+  const edges=[...state.customEdges]; const msgs=[];
+  const prev=nodes.length;
+  ensureSubroutine(nodes,edges,title,msgs);
+  if(nodes.length===prev){showMsg('parse-msg','"'+title+'" already exists.');return;}
+  const subNode=nodes.find(n=>n.data.title.toLowerCase()===title.toLowerCase());
+  let wired=0;
+  if(parentId){
+    const par=nodes.find(n=>n.id===parentId);
+    if(par){subNode.data.parentId=par.id;subNode.data.parentName=par.data.title;
+      if(ensureEdge(edges,par.id,subNode.id,'contains',false,'#a78bfa')) wired++;}
+  }
+  applyState({customNodes:nodes,customEdges:edges}); inp.value=''; if(parEl) parEl.value='';
+  if(wired) showMsg('parse-msg','Added "'+title+'" · wired to parent.',true);
+}
+
+function parseUse(){
+  const txt=document.getElementById('use-txt'),srcEl=document.getElementById('use-src');
+  if(!txt||!txt.value.trim()) return;
+  const lines=txt.value.split('\n').map(l=>l.trim()).filter(l=>/^use\b/i.test(l));
+  if(!lines.length){showMsg('parse-msg','No USE statements found.');return;}
+  const nodes=state.customNodes.map(n=>({...n,data:{...n.data}}));
+  const edges=[...state.customEdges]; const msgs=[];
+  let addedN=0,addedE=0,skip=0;
+  const srcNode=srcEl&&srcEl.value?nodes.find(n=>n.id===srcEl.value):null;
+  lines.forEach(line=>{
+    const m=line.match(/USE\s+([\w_]+)(?:\s*,\s*ONLY\s*:\s*(.+))?/i);
+    if(!m) return;
+    const modTitle=m[1].trim();
+    const onlySyms=m[2]?m[2].split(',').map(s=>s.trim()).filter(Boolean):[];
+    const prev=nodes.length;
+    const modNode=ensureModule(nodes,edges,modTitle,msgs);
+    if(nodes.length>prev) addedN++;
+    if(srcNode&&!onlySyms.length){
+      if(ensureEdge(edges,srcNode.id,modNode.id,'USE',true)) addedE++; else skip++;
+    }
+    onlySyms.forEach(sym=>{
+      const prev2=nodes.length;
+      const subNode=ensureSubroutine(nodes,edges,sym,msgs);
+      if(nodes.length>prev2) addedN++;
+      if(srcNode){if(ensureEdge(edges,srcNode.id,subNode.id,'ONLY: '+sym,true)) addedE++; else skip++;}
+      ensureEdge(edges,subNode.id,modNode.id,'in',false,'#a78bfa');
+    });
+  });
+  applyState({customNodes:nodes,customEdges:edges});
+  showMsg('parse-msg',lines.length+' stmt(s) · '+addedN+' node(s) · '+addedE+' edge(s)'+(skip?' · '+skip+' dup':'')+(msgs.length?'\n'+msgs.join('\n'):''),true);
+  txt.value='';
+}
+
+function exportJSON(){
+  dl(JSON.stringify({
+    version:2,
+    nodes:state.customNodes.map(n=>({
+      id:n.id,
+      type:n.data.nodeType,
+      title:n.data.title,
+      parentId:n.data.parentId||null,
+      parentName:n.data.parentName||null,
+      position:state.nodePositions[n.id]||null,
+    })),
+    edges:state.customEdges.map(e=>({
+      id:e.id,
+      source:e.source,
+      target:e.target,
+      label:e.label||'',
+      type:e.data?.isDashed?'use':'contains',
+    })),
+  },null,2),'fortran-deps.json','application/json');
+  showMsg('export-msg','Saved fortran-deps.json',true);
+  setTimeout(()=>{const el=document.getElementById('export-msg');if(el)el.innerHTML='';},3000);
+}
+
+async function importJSONFile(file){
+  if(!file) return;
+  try{
+    const imported=JSON.parse(await file.text());
+    if(!imported||!Array.isArray(imported.nodes)||!Array.isArray(imported.edges))
+      throw new Error('Expected a JSON object containing "nodes" and "edges" arrays.');
+
+    const existingNodes=state.customNodes.map(n=>({...n,data:{...n.data}}));
+    const existingEdges=state.customEdges.map(e=>({...e,data:{...(e.data||{})},style:{...(e.style||{})}}));
+    const existingByTitle=new Map(existingNodes.map(n=>[n.data.title.trim().toLowerCase(),n]));
+    const usedNodeIds=new Set(existingNodes.map(n=>n.id));
+    const usedEdgeIds=new Set(existingEdges.map(e=>e.id));
+    const idMap=new Map();
+    const addedNodes=[];
+    let mergedNodes=0;
+
+    imported.nodes.forEach((n,i)=>{
+      const title=String(n?.title??n?.data?.title??'').trim();
+      const nodeType=String(n?.type??n?.nodeType??n?.data?.nodeType??'').toLowerCase();
+      if(!title) throw new Error(`Node ${i+1} has no title.`);
+      if(!['module','subroutine','external'].includes(nodeType))
+        throw new Error(`Node "${title}" has an unsupported type: ${nodeType||'(missing)'}.`);
+
+      const sourceId=String(n?.id||`n-import-${i+1}`);
+      const matching=existingByTitle.get(title.toLowerCase());
+      if(matching){
+        idMap.set(sourceId,matching.id);
+        // Preserve existing metadata, but upgrade an external placeholder when the import is more specific.
+        if(matching.data.nodeType==='external'&&nodeType!=='external'){
+          matching.data.nodeType=nodeType;
+          matching.data.flag=nodeType[0].toUpperCase()+nodeType.slice(1);
+        }
+        if(!matching.data.parentId&&n?.parentId) matching.data.parentId=String(n.parentId);
+        if(!matching.data.parentName&&n?.parentName) matching.data.parentName=String(n.parentName);
+        mergedNodes++;
+        return;
+      }
+
+      let id=sourceId;
+      let suffix=1;
+      while(usedNodeIds.has(id)) id=`${sourceId}-import-${suffix++}`;
+      usedNodeIds.add(id);
+      idMap.set(sourceId,id);
+      const node={
+        id,
+        type:'workflow',
+        position:{x:0,y:0},
+        data:{
+          nodeType,
+          title,
+          flag:nodeType[0].toUpperCase()+nodeType.slice(1),
+          ...(n.parentId?{parentId:String(n.parentId)}:{}),
+          ...(n.parentName?{parentName:String(n.parentName)}:{}),
+        },
+      };
+      addedNodes.push(node);
+      existingNodes.push(node);
+      existingByTitle.set(title.toLowerCase(),node);
+    });
+
+    const edgeKey=e=>`${e.source}\u0000${e.target}\u0000${e.label||''}`;
+    const existingEdgeKeys=new Set(existingEdges.map(edgeKey));
+    let addedEdges=0, skippedEdges=0;
+
+    imported.edges.forEach((e,i)=>{
+      const rawSource=String(e?.source??'');
+      const rawTarget=String(e?.target??'');
+      const source=idMap.get(rawSource);
+      const target=idMap.get(rawTarget);
+      if(!source||!target)
+        throw new Error(`Edge ${i+1} refers to a node that is not present in the import.`);
+
+      const label=String(e?.label??'');
+      const key=`${source}\u0000${target}\u0000${label}`;
+      if(existingEdgeKeys.has(key)){skippedEdges++;return;}
+
+      const type=String(e?.type??'').toLowerCase();
+      const baseId=String(e?.id||`e-import-${i+1}-${Date.now()}`);
+      let id=baseId, suffix=1;
+      while(usedEdgeIds.has(id)) id=`${baseId}-import-${suffix++}`;
+      usedEdgeIds.add(id);
+      existingEdgeKeys.add(key);
+      existingEdges.push({
+        id,source,target,label,
+        data:{isDashed:type==='use'||Boolean(e?.data?.isDashed)},
+        style:{stroke:type==='use'?'#f472b6':'#a78bfa'},
+      });
+      addedEdges++;
+    });
+
+    const nodePositions={...state.nodePositions};
+    const existingPositionValues=Object.values(state.nodePositions||{});
+    const maxExistingX=existingPositionValues.length
+      ?Math.max(...existingPositionValues.map(p=>Number(p.x)||0))
+      :0;
+    const importedPositionValues=imported.nodes
+      .map(n=>n?.position)
+      .filter(p=>p&&Number.isFinite(Number(p.x))&&Number.isFinite(Number(p.y)));
+    const minImportedX=importedPositionValues.length
+      ?Math.min(...importedPositionValues.map(p=>Number(p.x)))
+      :0;
+    const xOffset=existingNodes.length-addedNodes.length>0 ? maxExistingX-minImportedX+180 : 0;
+    let positionedNewNodes=0;
+
+    imported.nodes.forEach((n,i)=>{
+      const sourceId=String(n?.id||`n-import-${i+1}`);
+      const finalId=idMap.get(sourceId);
+      if(!finalId||state.customNodes.some(x=>x.id===finalId)) return;
+      const p=n?.position;
+      if(p&&Number.isFinite(Number(p.x))&&Number.isFinite(Number(p.y))){
+        nodePositions[finalId]={x:Number(p.x)+xOffset,y:Number(p.y)};
+        positionedNewNodes++;
+      }
+    });
+
+    if(!addedNodes.length&&!addedEdges){
+      showMsg('export-msg',`Nothing new to import · ${mergedNodes} existing node(s) matched · ${skippedEdges} duplicate edge(s) skipped.`,true);
+      return;
+    }
+
+    undoStack.push(JSON.parse(snapState()));
+    if(undoStack.length>HISTORY_LIMIT) undoStack.shift();
+    redoStack=[];
+    state={...state,customNodes:existingNodes,customEdges:existingEdges,nodePositions};
+    saveState();syncGraph();renderSidebar();
+
+    if(addedNodes.length&&positionedNewNodes<addedNodes.length)
+      setTimeout(()=>runLayout('dagre-lr'),80);
+    else
+      setTimeout(()=>cy.fit(undefined,40),80);
+
+    showMsg('export-msg',
+      `Merged JSON · ${addedNodes.length} node(s) added · ${mergedNodes} existing node(s) matched · ${addedEdges} edge(s) added${skippedEdges?` · ${skippedEdges} duplicate edge(s) skipped`:''}.`,
+      true);
+  }catch(err){
+    showMsg('export-msg','Import failed: '+(err?.message||String(err)));
+  }
+}
+
+function exportDOT(){
+  const AC={module:theme==='dark'?'#60a5fa':'#2563eb',subroutine:theme==='dark'?'#a78bfa':'#7c3aed',external:theme==='dark'?'#f472b6':'#db2777'};
+  let dot='digraph fortran_deps {\n  rankdir=LR;\n  node [shape=box style=filled fontname="monospace"];\n';
+  state.customNodes.forEach(n=>{const c=AC[n.data.nodeType]||'#aaa';dot+=`  "${n.data.title}" [fillcolor="${c}" label="${n.data.title}\\n(${n.data.nodeType})"];\n`;});
+  state.customEdges.forEach(e=>{const sn=state.customNodes.find(n=>n.id===e.source),tn=state.customNodes.find(n=>n.id===e.target);if(!sn||!tn)return;dot+=`  "${sn.data.title}" -> "${tn.data.title}"${e.label?' [label="'+e.label+'"]':''};\n`;});
+  dot+='}\n'; dl(dot,'fortran-deps.dot','text/plain');
+  showMsg('export-msg','Saved fortran-deps.dot',true);
+  setTimeout(()=>{const el=document.getElementById('export-msg');if(el)el.innerHTML='';},3000);
+}
+function dl(content,filename,mime){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:mime}));a.download=filename;a.click();URL.revokeObjectURL(a.href);}
+
+// ── Nodes tab ─────────────────────────────────────────────────────────────────
+function renderNodesTab(){
+  const hidden=new Set(state.hiddenNodeIds);
+  const filtered=state.customNodes.filter(n=>n.data.title.toLowerCase().includes(nodeQuery.toLowerCase()));
+  const isDark=theme==='dark';
+  const AC={module:isDark?'#60a5fa':'#2563eb',subroutine:isDark?'#a78bfa':'#7c3aed',external:isDark?'#f472b6':'#db2777'};
+  return `
+<div class="row" style="margin-bottom:8px">
+  <input class="fi" placeholder="Search nodes…" value="${esc(nodeQuery)}" oninput="nodeQuery=this.value;renderSidebar()"/>
+</div>
+${hidden.size?`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+  <span style="font-size:11px;color:var(--muted)">${hidden.size} hidden</span>
+  <button class="btn" style="font-size:10px;padding:3px 9px" onclick="showAllNodes()">Show all</button>
+</div>`:''}
+${!filtered.length?`<p style="color:var(--muted);font-size:12px;margin-top:6px">${nodeQuery?'No matches.':'No nodes yet.'}</p>`
+  :filtered.map(n=>{
+    const isH=hidden.has(n.id),isP=pathSet.has(n.id);
+    const c=AC[n.data.nodeType]||AC.module;
+    const tagCls=n.data.nodeType==='module'?'ntag-m':n.data.nodeType==='subroutine'?'ntag-s':'ntag-e';
+    return `<div class="nli${selectedId===n.id?' sel':''}${isP?' in-path':''}${isH?' hidden-row':''}" onclick="selectNodeById('${n.id}')">
+      <span class="ndot" style="background:${isH?'rgba(128,128,128,.3)':c}"></span>
+      <span class="nname" style="opacity:${isH?.45:1}">${typeIcon(n.data.nodeType)} ${esc(n.data.title)}</span>
+      ${isP?`<span class="ntag ntag-p">path</span>`:isH?`<span class="ntag ntag-h">hidden</span>`:`<span class="ntag ${tagCls}">${n.data.nodeType[0].toUpperCase()}</span>`}
+      <button class="hbtn" title="${isH?'Show':'Hide'} (Cmd+H)" onclick="event.stopPropagation();toggleHide('${n.id}')">${isH?'👁':'⊘'}</button>
+    </div>`;
+  }).join('')}
+${state.customNodes.length?`<button class="btn btn-danger btn-full" style="margin-top:10px" onclick="clearAll()">Clear all nodes</button>`:''}`;
+}
+
+function selectNodeById(id){
+  if(pathMode){
+    if(pathSet.has(id)) pathSet.delete(id); else pathSet.add(id);
+    applyHighlight(); renderSidebar(); return;
+  }
+  selectedId=id; applyHighlight();
+  const el=cy.getElementById(id);
+  if(el.length) cy.animate({center:{eles:el},zoom:Math.max(cy.zoom(),0.9)},{duration:400});
+  renderSidebar();
+}
+function toggleHide(id){
+  const hidden=state.hiddenNodeIds||[];
+  applyState({hiddenNodeIds:hidden.includes(id)?hidden.filter(x=>x!==id):[...hidden,id]});
+  if(selectedId===id) selectedId=null;
+  if(pathSet.has(id)){pathSet.delete(id);applyHighlight();}
+}
+function showAllNodes(){applyState({hiddenNodeIds:[]});}
+function clearAll(){if(!confirm('Clear all nodes and edges?'))return;applyState({customNodes:[],customEdges:[],nodePositions:{},hiddenNodeIds:[]});selectedId=null;pathSet.clear();}
+
+// ── Detail tab ────────────────────────────────────────────────────────────────
+function renderDetailTab(){
+  const hidden=new Set(state.hiddenNodeIds);
+  const node=selectedId?state.customNodes.find(n=>n.id===selectedId):null;
+  const isH=selectedId?hidden.has(selectedId):false;
+  const isP=selectedId?pathSet.has(selectedId):false;
+  const nodeNote=(state.perNode||{})[selectedId]||'';
+  const globalNote=state.global||'';
+  const isDark=theme==='dark';
+  const AC={module:isDark?'#60a5fa':'#2563eb',subroutine:isDark?'#a78bfa':'#7c3aed',external:isDark?'#f472b6':'#db2777'};
+  const ABG={module:isDark?'rgba(96,165,250,.16)':'rgba(37,99,235,.10)',subroutine:isDark?'rgba(167,139,250,.16)':'rgba(124,58,237,.10)',external:isDark?'rgba(244,114,182,.16)':'rgba(219,39,119,.10)'};
+
+  let html=`<button class="btn btn-full" onclick="toggleFocusMode()" style="margin-bottom:10px">
+    <strong>${state.focusMode?'Disable focus mode':'Enable focus mode'}</strong>
+    <span style="display:block;color:var(--muted);font-size:11px;margin-top:2px">${state.focusMode?'Restore overlays.':'Hide legend, toolbar, and theme button.'}</span>
+  </button>`;
+
+  if(pathMode){
+    html+=`<div class="path-banner">Path mode ON · ${pathSet.size} node(s) selected.<br>Click nodes on the canvas to add/remove them. Edges between selected nodes are highlighted.</div>
+    <div class="row">
+      <button class="btn" style="flex:1" onclick="clearPath()">Clear path</button>
+      <button class="btn" style="flex:1" onclick="togglePathMode()">Exit path mode</button>
+    </div>`;
+  }
+
+  if(!node){
+    html+=`<p style="color:var(--muted);font-size:12px">${pathMode?'':'Click a node to inspect it.'}</p>`;
+  } else {
+    const ts=AC[node.data.nodeType]||AC.module;
+    const tsBg=ABG[node.data.nodeType]||ABG.module;
+    const label=node.data.nodeType==='module'?'Module':node.data.nodeType==='subroutine'?'Subroutine':'External';
+    const outgoing=state.customEdges.filter(e=>e.source===selectedId);
+    const incoming=state.customEdges.filter(e=>e.target===selectedId);
+    const deg=outgoing.length+incoming.length;
+
+    html+=`${isH?`<div class="hbanner">Hidden from canvas.</div>`:''}
+<div class="dcard">
+  <span class="dbadge" style="color:${ts};background:${tsBg}">${label}</span>
+  <h3 class="dtitle">${typeIcon(node.data.nodeType)} ${esc(node.data.title)}</h3>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Degree: ${deg}</div>
+  ${node.data.parentName?`<div style="font-size:11px;color:var(--muted)">⊂ ${esc(node.data.parentName)}</div>`:''}
+  ${outgoing.length?`<div class="dblock"><p class="dlbl">Uses →</p><div class="chips">
+    ${outgoing.map(e=>{const t=state.customNodes.find(n=>n.id===e.target);if(!t)return'';const tc=AC[t.data.nodeType]||AC.module;const tbg=ABG[t.data.nodeType]||ABG.module;return`<span class="chip" style="background:${tbg};color:${tc}" onclick="selectNodeById('${t.id}')">${typeIcon(t.data.nodeType)} ${esc(t.data.title)}</span>`;}).join('')}
+  </div></div>`:''}
+  ${incoming.length?`<div class="dblock"><p class="dlbl">Used by ←</p><div class="chips">
+    ${incoming.map(e=>{const f=state.customNodes.find(n=>n.id===e.source);if(!f)return'';const fc=AC[f.data.nodeType]||AC.module;const fbg=ABG[f.data.nodeType]||ABG.module;return`<span class="chip" style="background:${fbg};color:${fc}" onclick="selectNodeById('${f.id}')">${typeIcon(f.data.nodeType)} ${esc(f.data.title)}</span>`;}).join('')}
+  </div></div>`:''}
+  <div class="dacts">
+    <button class="btn" onclick="selectNodeById('${selectedId}')" ${isH?'disabled':''}>Focus</button>
+    <button class="btn" onclick="renameNode('${selectedId}')">Rename</button>
+    <button class="btn" onclick="toggleHide('${selectedId}')" title="Cmd+H">${isH?'Show':'Hide'}</button>
+    <button class="btn btn-danger" onclick="deleteNode('${selectedId}')" title="Del">Delete</button>
+  </div>
+</div>
+<div class="nshell">
+  <div class="nhead">
+    <strong>Notes${nodeNote.trim()?'<span class="saved-badge">saved</span>':''}</strong>
+    <button class="btn" style="font-size:10px;padding:3px 9px" onclick="clearNotes()">Clear</button>
+  </div>
+  <label class="lbl" style="margin-top:0">Note for this node</label>
+  <input class="fi" id="nn" value="${esc(nodeNote)}" placeholder="Short note…" oninput="updateNodeNote(this.value)"/>
+  <label class="lbl">Global notes</label>
+  <textarea class="fi" id="gn" placeholder="General codebase notes…" oninput="updateGlobalNote(this.value)">${esc(globalNote)}</textarea>
+  <p class="nhelp">Stored in localStorage · shortcuts: Del=delete, Cmd+H=hide, Esc=deselect</p>
+</div>`;
+  }
+
+  const visible=state.customNodes.filter(n=>!hidden.has(n.id));
+  if(visible.length){
+    html+=`<p class="lbl">Quick Jump</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    ${visible.slice(0,12).map(n=>`<button class="btn" style="text-align:left;font-size:11px;padding:6px 9px" onclick="selectNodeById('${n.id}')">
+      <strong style="display:block;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${typeIcon(n.data.nodeType)} ${esc(n.data.title)}</strong>
+      <span style="color:var(--muted);font-size:10px">${n.data.nodeType}</span>
+    </button>`).join('')}</div>`;
+  }
+  return html;
+}
+
+function renameNode(id){
+  const node=state.customNodes.find(n=>n.id===id);if(!node)return;
+  const name=prompt('Rename:',node.data.title);if(!name||!name.trim())return;
+  applyState({customNodes:state.customNodes.map(n=>n.id===id?{...n,data:{...n.data,title:name.trim()}}:n)});
+}
+function deleteNode(id){
+  applyState({customNodes:state.customNodes.filter(n=>n.id!==id),
+    customEdges:state.customEdges.filter(e=>e.source!==id&&e.target!==id),
+    hiddenNodeIds:state.hiddenNodeIds.filter(x=>x!==id)});
+  if(selectedId===id) selectedId=null;
+  pathSet.delete(id); applyHighlight();
+}
+function updateNodeNote(v){state.perNode={...(state.perNode||{}),[selectedId]:v};saveState();
+  const nb=document.querySelector('.saved-badge');
+  if(v.trim()&&!nb){const s=document.querySelector('.nhead strong');if(s)s.insertAdjacentHTML('beforeend','<span class="saved-badge">saved</span>');}}
+function updateGlobalNote(v){state.global=v;saveState();}
+function clearNotes(){state.perNode={};state.global='';saveState();renderSidebar();}
+function toggleFocusMode(){
+  state.focusMode=!state.focusMode;saveState();
+  const show=!state.focusMode;
+  ['toolbar','legend'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display=show?'':'none';});
+  document.getElementById('theme-btn').style.display=show?'':'none';
+  renderSidebar();
+}
+
+// ── Toolbar ───────────────────────────────────────────────────────────────────
+let dashedMode=true;
+function renderToolbar(){
+  const tb=document.getElementById('toolbar');
+  tb.style.display=state.focusMode?'none':'';
+  tb.innerHTML=`
+<div class="layout-group">
+  <div class="layout-group-title">Layout</div>
+  <div class="layout-row">
+    <button class="lbtn" onclick="runLayout('dagre-lr')">Dagre LR</button>
+    <button class="lbtn" onclick="runLayout('dagre-tb')">Dagre TB</button>
+  </div>
+  <div class="layout-row">
+    <button class="lbtn" onclick="runLayout('cose')">Force</button>
+    <button class="lbtn" onclick="runLayout('breadth')">Breadth</button>
+  </div>
+  <div class="layout-row">
+    <button class="lbtn" onclick="runLayout('circle')">Circle</button>
+    <button class="lbtn" onclick="runLayout('concentric')">Concentric</button>
+  </div>
+  <div class="layout-row">
+    <button class="lbtn" onclick="runLayout('grid')" style="flex:none;width:100%">Grid</button>
+  </div>
+</div>
+<div class="layout-group">
+  <div class="layout-group-title">Text size</div>
+  <div style="display:flex;align-items:center;gap:8px;padding:2px 0">
+    <input type="range" min="0.7" max="2.2" step="0.1"
+      value="${(state.textScale||1.0).toFixed(1)}"
+      style="flex:1;accent-color:var(--cyan);height:4px;cursor:pointer"
+      oninput="setTextScale(parseFloat(this.value));document.getElementById('ts-val').textContent=parseFloat(this.value).toFixed(1)+'×'"/>
+    <span id="ts-val" style="font-size:10px;color:var(--muted);min-width:28px">${(state.textScale||1.0).toFixed(1)}×</span>
+  </div>
+</div>
+<button class="tbtn" onclick="cy.fit(undefined,40)"><strong>Fit view</strong><span>Zoom to all nodes</span></button>
+<button class="tbtn${pathMode?' path-on':''}" onclick="togglePathMode()"><strong>${pathMode?'Exit path mode':'Path select mode'}</strong><span>${pathMode?pathSet.size+' node(s) in path':'Click nodes to trace a workflow path'}</span></button>
+<button class="tbtn${dashedMode?' on':''}" onclick="dashedMode=!dashedMode;renderToolbar()"><strong>${dashedMode?'Dashed':'Solid'} connect</strong><span>Edge style for new edges</span></button>
+<button class="tbtn" onclick="undo()" ${!undoStack.length?'disabled':''}><strong>Undo</strong><span>Cmd/Ctrl+Z</span></button>
+<button class="tbtn" onclick="redo()" ${!redoStack.length?'disabled':''}><strong>Redo</strong><span>Shift+Cmd/Ctrl+Z</span></button>`;
+}
+
+function setTextScale(v) {
+  state.textScale = Math.round(v * 10) / 10;
+  saveState();
+  syncGraph(); // re-computes fontSize for all nodes
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function showMsg(id,text,ok=false){const el=document.getElementById(id);if(el)el.innerHTML=`<div class="msg${ok?' ok':''}">${esc(text)}</div>`;}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+applyTheme(theme);
+syncGraph();
+renderSidebar();
+if(state.focusMode){['toolbar','legend','theme-btn'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});}
+setTimeout(()=>cy.fit(undefined,40),200);
+</script>
+</body>
+</html>
