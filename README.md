@@ -69,6 +69,23 @@ FortGraph/
   </tr>
 </table>
 
+<table>
+  <tr>
+    <td align="center"><strong>Explore details and add notes</strong></td>
+    <td align="center"><strong>Hide nodes</strong></td>
+  </tr>
+  <tr>
+    <td>
+      <img src="assets/explore_details.png"
+           alt="Details and Note">
+    </td>
+    <td>
+      <img src="assets/hide_nodes.png"
+           alt="Hide or delete nodes">
+    </td>
+  </tr>
+</table>
+
 ## Requirements
 
 ### Python parser
