@@ -1,6 +1,16 @@
 # FortGraph
 
-FortGraph is a lightweight toolkit for generating and exploring dependency graphs for Fortran codebases.
+FortGraph is a lightweight toolkit for generating and exploring dependency graphs for Fortran codebases. The project was created to address the limited availability of open-source tools for parsing, visualizing, and understanding the structure of Fortran software.
+
+
+
+<p align="center">
+  <a href="assets/fortgraph-overview.png">
+    <img src="assets/light_theme.png"
+         alt="FortGraph interface"
+         width="900">
+  </a>
+</p>
 
 It consists of two independent components:
 
@@ -32,6 +42,7 @@ FortGraph/
 ├── FortGraph.html
 ├── fortran_to_workflow.py
 ├── README.md
+├── assets
 └── examples/
     └── basic/
         ├── README.md
@@ -39,6 +50,19 @@ FortGraph/
         ├── sample_project.json
         └── fortgraph.schema.json
 ```
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center"><strong>Dark theme</strong></td>
+  </tr>
+  <tr>
+    <td>
+      <img src="assets/dark_theme.png"
+           alt="FortGraph dark theme">
+    </td>
+  </tr>
+</table>
 
 ## Requirements
 
@@ -54,32 +78,18 @@ FortGraph/
 
 ## Quick start
 
-### 1. Generate a dependency graph
+### 1. Open the viewer
+
+Open `FortGraph.html` in a browser. 
+
+- The interface allows manual addition of modules and subroutines and graph export in JSON format. See the below section "Using the interactive viewer" for a more complete listing of its capabilities.
+
+- For complex modules, you may want to use the following Python-based dependency generation workflow.
+
+### 2. Generate a dependency graph
 
 ```bash
 python3 fortran_to_workflow.py source.f90 -o dependencies.json
-```
-
-### 2. Open the viewer
-
-Open `FortGraph.html` in a browser.
-
-On macOS:
-
-```bash
-open FortGraph.html
-```
-
-On Linux:
-
-```bash
-xdg-open FortGraph.html
-```
-
-On Windows PowerShell:
-
-```powershell
-start FortGraph.html
 ```
 
 ### 3. Import the JSON
