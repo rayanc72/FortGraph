@@ -470,8 +470,6 @@ The Python parser runs locally.
 
 The HTML viewer processes imported JSON locally in the browser and does not require a backend service.
 
-When FortGraph is hosted on a third-party platform, that platform's normal access-logging and privacy policies may still apply.
-
 ## License
 
 The code is distributed with open-source MIT license.
