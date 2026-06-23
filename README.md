@@ -2,6 +2,8 @@
 
 FortGraph is a lightweight toolkit for generating and exploring dependency graphs for Fortran codebases. The project was created to address the limited availability of open-source tools for parsing, visualizing, and understanding the structure of Fortran software.
 
+Download and open FortGraph.html in a browser to get started.
+
 
 
 <p align="center">
