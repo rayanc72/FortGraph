@@ -447,14 +447,3 @@ The code is distributed with open-source MIT license.
 ## Contributing
 
 Issues and pull requests are welcome.
-
-Useful contribution areas include:
-
-- improved Fortran syntax coverage,
-- cycle detection,
-- type-bound procedure support,
-- interface resolution,
-- preprocessor-aware parsing,
-- offline dependency packaging,
-- graph filtering and grouping,
-- automated parser tests.
