@@ -1,0 +1,136 @@
+{
+  "version": 2,
+  "nodes": [
+    {
+      "id": "n-00001",
+      "type": "module",
+      "title": "math_utils",
+      "parentId": null,
+      "parentName": null,
+      "position": {
+        "x": 120,
+        "y": 120
+      }
+    },
+    {
+      "id": "n-00002",
+      "type": "subroutine",
+      "title": "square",
+      "parentId": "n-00001",
+      "parentName": "math_utils",
+      "position": {
+        "x": 120,
+        "y": 340
+      }
+    },
+    {
+      "id": "n-00003",
+      "type": "subroutine",
+      "title": "print_square",
+      "parentId": "n-00001",
+      "parentName": "math_utils",
+      "position": {
+        "x": 350,
+        "y": 340
+      }
+    },
+    {
+      "id": "n-00004",
+      "type": "module",
+      "title": "simulation",
+      "parentId": null,
+      "parentName": null,
+      "position": {
+        "x": 350,
+        "y": 120
+      }
+    },
+    {
+      "id": "n-00005",
+      "type": "subroutine",
+      "title": "run_simulation",
+      "parentId": "n-00004",
+      "parentName": "simulation",
+      "position": {
+        "x": 580,
+        "y": 340
+      }
+    },
+    {
+      "id": "n-00006",
+      "type": "subroutine",
+      "title": "main",
+      "parentId": null,
+      "parentName": null,
+      "position": {
+        "x": 810,
+        "y": 340
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-00001",
+      "source": "n-00001",
+      "target": "n-00002",
+      "label": "contains",
+      "type": "contains"
+    },
+    {
+      "id": "e-00002",
+      "source": "n-00001",
+      "target": "n-00003",
+      "label": "contains",
+      "type": "contains"
+    },
+    {
+      "id": "e-00003",
+      "source": "n-00004",
+      "target": "n-00005",
+      "label": "contains",
+      "type": "contains"
+    },
+    {
+      "id": "e-00004",
+      "source": "n-00004",
+      "target": "n-00003",
+      "label": "ONLY: print_square",
+      "type": "use"
+    },
+    {
+      "id": "e-00005",
+      "source": "n-00003",
+      "target": "n-00001",
+      "label": "in",
+      "type": "contains"
+    },
+    {
+      "id": "e-00006",
+      "source": "n-00005",
+      "target": "n-00003",
+      "label": "CALL print_square",
+      "type": "use"
+    },
+    {
+      "id": "e-00007",
+      "source": "n-00006",
+      "target": "n-00005",
+      "label": "ONLY: run_simulation",
+      "type": "use"
+    },
+    {
+      "id": "e-00008",
+      "source": "n-00005",
+      "target": "n-00004",
+      "label": "in",
+      "type": "contains"
+    },
+    {
+      "id": "e-00009",
+      "source": "n-00006",
+      "target": "n-00005",
+      "label": "CALL run_simulation",
+      "type": "use"
+    }
+  ]
+}
