@@ -10,7 +10,7 @@ It consists of two independent components:
 The Python parser has no third-party dependencies, and the viewer does not require a backend server.
 
 <p align="center">
-  <a href="assets/fortgraph-overview.png">
+  <a href="assets/light_theme.png">
     <img src="assets/light_theme.png"
          alt="FortGraph interface"
          width="900">
@@ -50,7 +50,7 @@ FortGraph/
         └── fortgraph.schema.json
 ```
 ## Screenshots
-
+click on the panels to zoom.
 <table>
   <tr>
     <td align="center"><strong>Dark theme</strong></td>
@@ -58,10 +58,12 @@ FortGraph/
   </tr>
   <tr>
     <td>
+      <a href="assets/dark_theme.png">
       <img src="assets/dark_theme.png"
            alt="FortGraph dark theme">
     </td>
     <td>
+      <a href="assets/highlight.png">
       <img src="assets/highlight.png"
            alt="Highlight a workflow">
     </td>
@@ -75,10 +77,12 @@ FortGraph/
   </tr>
   <tr>
     <td>
+      <a href="assets/explore_details.png">
       <img src="assets/explore_details.png"
            alt="Details and Note">
     </td>
     <td>
+      <a href="assets/hide_nodes.png">
       <img src="assets/hide_nodes.png"
            alt="Hide or delete nodes">
     </td>
