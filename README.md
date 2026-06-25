@@ -113,7 +113,7 @@ click on the panels to zoom.
 
 ### Python parser
 
-- Python 3.7+
+- Python 3.10
 
 ### HTML viewer
 
