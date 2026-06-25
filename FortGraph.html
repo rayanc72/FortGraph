@@ -613,6 +613,11 @@ document.addEventListener('keydown', e => {
 
 // ── Cytoscape ─────────────────────────────────────────────────────────────────
 let selectedId = null;
+const DEFAULT_MIN_ZOOM = 0.002;
+const DEFAULT_MAX_ZOOM = 3;
+const DEFAULT_FIT_PADDING = 40;
+const DEFAULT_SLIDER_MIN_ZOOM = 0.02;
+const DEFAULT_SLIDER_MAX_ZOOM = 2.5;
 
 const cy = cytoscape({
   container: document.getElementById('cy'),
@@ -620,12 +625,50 @@ const cy = cytoscape({
   elements: [],
   layout: { name: 'preset' },
   wheelSensitivity: 0.3,
-  minZoom: 0.06, maxZoom: 3,
+  minZoom: DEFAULT_MIN_ZOOM, maxZoom: DEFAULT_MAX_ZOOM,
   hideEdgesOnViewport: true,
   textureOnViewport: true,
   motionBlur: true,
   pixelRatio: 1,
 });
+
+function getVisibleElements() {
+  return cy.elements(':visible');
+}
+
+function getFitZoom(padding = DEFAULT_FIT_PADDING) {
+  if (!cy) return 1;
+  const eles = getVisibleElements();
+  if (!eles.length) return 1;
+  const bb = eles.boundingBox();
+  const innerW = Math.max(1, cy.width() - padding * 2);
+  const innerH = Math.max(1, cy.height() - padding * 2);
+  const zoomX = bb.w > 0 ? innerW / bb.w : DEFAULT_MAX_ZOOM;
+  const zoomY = bb.h > 0 ? innerH / bb.h : DEFAULT_MAX_ZOOM;
+  const zoom = Math.min(zoomX, zoomY);
+  return Math.max(DEFAULT_MIN_ZOOM, Math.min(DEFAULT_MAX_ZOOM, Number.isFinite(zoom) ? zoom : 1));
+}
+
+function refreshZoomBounds() {
+  if (!cy) return;
+  const fitZoom = getFitZoom();
+  const slider = document.getElementById('zoom-slider');
+  if (slider) {
+    slider.min = DEFAULT_MIN_ZOOM.toFixed(3);
+    slider.max = DEFAULT_SLIDER_MAX_ZOOM.toFixed(1);
+    slider.step = fitZoom < 0.1 ? '0.01' : '0.05';
+  }
+}
+
+function fitGraphToViewport(padding = DEFAULT_FIT_PADDING) {
+  if (!cy) return;
+  refreshZoomBounds();
+  const eles = getVisibleElements();
+  if (!eles.length) return;
+  cy.fit(eles, padding);
+  refreshZoomBounds();
+  syncZoomUi();
+}
 
 function getThemeVar(v) {
   return getComputedStyle(document.documentElement).getPropertyValue(v).trim();
@@ -874,6 +917,7 @@ function syncGraph() {
 
   cy.edges().forEach(el => { if(!wantEdges.has(el.id())) el.remove(); });
   cy.endBatch();
+  refreshZoomBounds();
   applyHighlight();
 }
 
@@ -908,7 +952,10 @@ cy.on('dragfree','node',e=>{
   state.nodePositions={...state.nodePositions,[e.target.id()]:{x:pos.x,y:pos.y}};
   saveState();
 });
-cy.on('zoom',()=>syncZoomUi());
+cy.on('zoom',()=>{
+  refreshZoomBounds();
+  syncZoomUi();
+});
 
 cy.on('tap','node',e=>{
   const id=e.target.id();
@@ -944,6 +991,7 @@ function runLayout(name) {
     const pos={};
     cy.nodes().forEach(n=>{ pos[n.id()]={x:n.position('x'),y:n.position('y')}; });
     state.nodePositions={...state.nodePositions,...pos}; saveState();
+    fitGraphToViewport();
   }, 700);
 }
 
@@ -999,6 +1047,8 @@ function setTab(t){
 window.addEventListener('resize', ()=>{
   document.body.classList.toggle('sidebar-open', sidebarOpen && isMobileLayout());
   applySidebarCollapsed();
+  cy.resize();
+  refreshZoomBounds();
 });
 
 const TABS=[['build','Build'],['browse','Browse'],['inspect','Inspect']];
@@ -1064,8 +1114,8 @@ function renderAppChrome(){
       <div class="appbar-control-row">
         <div class="appbar-slider">
           <label for="zoom-slider">Zoom</label>
-          <input id="zoom-slider" type="range" min="0.3" max="2.5" step="0.05" value="${zoomLevel.toFixed(2)}" oninput="setZoomLevel(parseFloat(this.value))"/>
-          <span class="appbar-slider-value" id="zoom-value">${zoomLevel.toFixed(2)}×</span>
+          <input id="zoom-slider" type="range" min="${DEFAULT_MIN_ZOOM.toFixed(3)}" max="${DEFAULT_SLIDER_MAX_ZOOM.toFixed(1)}" step="${getFitZoom() < 0.1 ? '0.01' : '0.05'}" value="${zoomLevel}" oninput="setZoomLevel(parseFloat(this.value))"/>
+          <span class="appbar-slider-value" id="zoom-value">${formatZoom(zoomLevel)}×</span>
         </div>
       </div>`;
   }
@@ -1368,7 +1418,7 @@ async function importJSONFile(file){
     if(addedNodes.length&&positionedNewNodes<addedNodes.length)
       setTimeout(()=>runLayout('dagre-lr'),80);
     else
-      setTimeout(()=>cy.fit(undefined,40),80);
+      setTimeout(()=>fitGraphToViewport(),80);
 
     showMsg('export-msg',
       `Merged JSON · ${addedNodes.length} node(s) added · ${mergedNodes} existing node(s) matched · ${addedEdges} edge(s) added${skippedEdges?` · ${skippedEdges} duplicate edge(s) skipped`:''}.`,
@@ -1571,6 +1621,10 @@ function togglePerformanceMode(){
   renderToolbar();
 }
 
+function formatZoom(level) {
+  return (level < 0.1 ? level.toFixed(3) : level.toFixed(2));
+}
+
 function setZoomLevel(v) {
   if (!cy) return;
   const level = Math.max(cy.minZoom(), Math.min(cy.maxZoom(), v));
@@ -1580,8 +1634,8 @@ function setZoomLevel(v) {
   });
   const out = document.getElementById('zoom-value');
   const slider = document.getElementById('zoom-slider');
-  if (slider) slider.value = level.toFixed(2);
-  if (out) out.textContent = level.toFixed(2) + '×';
+  if (slider) slider.value = String(level);
+  if (out) out.textContent = formatZoom(level) + '×';
 }
 
 function syncZoomUi() {
@@ -1589,8 +1643,8 @@ function syncZoomUi() {
   const level = cy.zoom();
   const slider = document.getElementById('zoom-slider');
   const out = document.getElementById('zoom-value');
-  if (slider) slider.value = level.toFixed(2);
-  if (out) out.textContent = level.toFixed(2) + '×';
+  if (slider) slider.value = String(level);
+  if (out) out.textContent = formatZoom(level) + '×';
 }
 
 // ── Toolbar ───────────────────────────────────────────────────────────────────
@@ -1611,7 +1665,7 @@ function renderToolbar(){
   </div>
   <div class="toolbar-grid" style="margin-top:6px">
     <button class="lbtn" onclick="runLayout('grid')">Grid</button>
-    <button class="lbtn" onclick="cy.fit(undefined,40)">Fit view</button>
+    <button class="lbtn" onclick="fitGraphToViewport()">Fit view</button>
   </div>
 </div>
 `;
@@ -1636,7 +1690,7 @@ sidebarCollapsed = Boolean(state.focusMode) && !isMobileLayout();
 applyTheme(theme);
 toggleSidebar(false);
 applySidebarCollapsed();
-setTimeout(()=>cy.fit(undefined,40),200);
+setTimeout(()=>fitGraphToViewport(),200);
 </script>
 </body>
 </html>
