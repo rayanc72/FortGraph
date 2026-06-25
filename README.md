@@ -64,8 +64,8 @@ click on the panels to zoom.
            alt="FortGraph dark theme">
     </td>
     <td>
-      <a href="assets/highlight.png">
-      <img src="assets/highlight.png"
+      <a href="assets/highlight2.png">
+      <img src="assets/highlight2.png"
            alt="Highlight a workflow">
     </td>
   </tr>
