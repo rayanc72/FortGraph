@@ -7,94 +7,94 @@
 <style>
 /* ── Theme tokens ─────────────────────────────────────────────────────────── */
 [data-theme="dark"]{
-  --bg-body:linear-gradient(180deg,#071019 0%,#0b1520 52%,#101926 100%);
-  --bg-radial1:rgba(73,122,255,0.14);
-  --bg-radial2:rgba(16,185,129,0.08);
-  --shell-line:rgba(148,163,184,0.18);
-  --panel-bg:rgba(12,19,29,0.94);
-  --panel-bg-soft:rgba(16,24,37,0.84);
-  --panel-border:rgba(148,163,184,0.18);
-  --panel-border-strong:rgba(148,163,184,0.28);
-  --text:#f5f7fb;
-  --muted:#8ea0b8;
-  --muted-strong:#c3cedd;
-  --input-bg:rgba(10,16,25,0.84);
-  --input-border:rgba(148,163,184,0.22);
-  --input-hover:rgba(73,122,255,0.12);
-  --item-hover:rgba(73,122,255,0.10);
-  --item-sel-bg:rgba(73,122,255,0.14);
-  --item-sel-border:rgba(96,165,250,0.48);
-  --surface-raised:rgba(255,255,255,0.035);
-  --surface-muted:rgba(255,255,255,0.028);
-  --surface-emphasis:rgba(73,122,255,0.08);
+  --bg-body:linear-gradient(165deg,#050816 0%,#08101f 46%,#0d1730 100%);
+  --bg-radial1:rgba(66,165,245,0.10);
+  --bg-radial2:rgba(38,166,154,0.06);
+  --shell-line:rgba(117,142,167,0.14);
+  --panel-bg:rgba(6,12,26,0.96);
+  --panel-bg-soft:rgba(8,16,32,0.90);
+  --panel-border:rgba(117,142,167,0.16);
+  --panel-border-strong:rgba(117,142,167,0.28);
+  --text:#eef4fb;
+  --muted:#8196ac;
+  --muted-strong:#bac8d8;
+  --input-bg:rgba(5,10,22,0.92);
+  --input-border:rgba(117,142,167,0.22);
+  --input-hover:rgba(66,165,245,0.12);
+  --item-hover:rgba(66,165,245,0.08);
+  --item-sel-bg:rgba(66,165,245,0.14);
+  --item-sel-border:rgba(100,181,246,0.38);
+  --surface-raised:rgba(255,255,255,0.025);
+  --surface-muted:rgba(255,255,255,0.018);
+  --surface-emphasis:rgba(66,165,245,0.09);
   --surface-danger:rgba(251,113,133,0.10);
   --surface-warning:rgba(245,158,11,0.11);
   --surface-success:rgba(16,185,129,0.11);
-  --accent:#74a3ff;
-  --accent-strong:#90b5ff;
-  --accent-soft:rgba(116,163,255,0.14);
-  --accent-glow:rgba(116,163,255,0.24);
-  --graph-stroke:rgba(29,41,64,0.2);
-  --cy-bg:transparent; --cy-edge-label:#d8e0ea; --cy-edge-text-bg:#0b1420;
-  --cy-node-mod:#163255; --cy-node-sub:#1c294d; --cy-node-ext:#263047;
-  --accent-m:#79b8ff; --accent-s:#9cb0ff; --accent-e:#9bb0c6;
+  --accent:#64b5f6;
+  --accent-strong:#90caf9;
+  --accent-soft:rgba(100,181,246,0.14);
+  --accent-glow:rgba(100,181,246,0.22);
+  --graph-stroke:rgba(117,142,167,0.10);
+  --cy-bg:transparent; --cy-edge-label:#dbe5ee; --cy-edge-text-bg:#08101f;
+  --cy-node-mod:#1565c0; --cy-node-sub:#512da8; --cy-node-ext:#00695c;
+  --accent-m:#42a5f5; --accent-s:#9575cd; --accent-e:#26a69a;
   --path-color:#f59e0b;
   --path-soft:rgba(245,158,11,0.12); --path-soft2:rgba(245,158,11,0.16); --path-border:rgba(245,158,11,0.38); --path-border2:rgba(245,158,11,0.62);
-  --gold:#f59e0b; --red:#fb7185; --green:#10b981; --cyan:#74a3ff; --warm:#fb923c;
+  --gold:#f59e0b; --red:#fb7185; --green:#10b981; --cyan:#64b5f6; --warm:#fb923c;
   --gold-soft:rgba(245,158,11,0.12); --gold-soft2:rgba(245,158,11,0.09); --gold-border:rgba(245,158,11,0.34); --gold-border2:rgba(245,158,11,0.52);
   --red-soft:rgba(251,113,133,0.12);
   --green-soft:rgba(16,185,129,0.10);
-  --muted-soft:rgba(142,160,184,0.12);
-  --accent-m-soft:rgba(121,184,255,0.16); --accent-s-soft:rgba(156,176,255,0.16); --accent-e-soft:rgba(155,176,198,0.14);
+  --muted-soft:rgba(129,150,172,0.12);
+  --accent-m-soft:rgba(66,165,245,0.16); --accent-s-soft:rgba(149,117,205,0.16); --accent-e-soft:rgba(38,166,154,0.14);
 }
 [data-theme="light"]{
-  --bg-body:linear-gradient(180deg,#ffffff 0%,#fbfdff 55%,#ffffff 100%);
-  --bg-radial1:rgba(37,99,235,0.035);
-  --bg-radial2:rgba(16,185,129,0.02);
-  --shell-line:rgba(15,23,42,0.10);
+  --bg-body:#ffffff;
+  --bg-radial1:rgba(255,255,255,0);
+  --bg-radial2:rgba(255,255,255,0);
+  --shell-line:rgba(103,126,154,0.12);
   --panel-bg:rgba(255,255,255,0.94);
-  --panel-bg-soft:rgba(255,255,255,0.88);
-  --panel-border:rgba(15,23,42,0.10);
-  --panel-border-strong:rgba(15,23,42,0.18);
-  --text:#0f172a;
-  --muted:#66768c;
-  --muted-strong:#334155;
+  --panel-bg-soft:rgba(252,253,255,0.90);
+  --panel-border:rgba(103,126,154,0.12);
+  --panel-border-strong:rgba(103,126,154,0.20);
+  --text:#10243e;
+  --muted:#60738a;
+  --muted-strong:#31455f;
   --input-bg:rgba(255,255,255,0.98);
-  --input-border:rgba(148,163,184,0.32);
-  --input-hover:rgba(37,99,235,0.08);
-  --item-hover:rgba(37,99,235,0.06);
-  --item-sel-bg:rgba(37,99,235,0.10);
-  --item-sel-border:rgba(37,99,235,0.32);
-  --surface-raised:rgba(255,255,255,0.84);
-  --surface-muted:rgba(248,250,252,0.90);
-  --surface-emphasis:rgba(37,99,235,0.08);
+  --input-border:rgba(144,164,174,0.34);
+  --input-hover:rgba(66,165,245,0.08);
+  --item-hover:rgba(66,165,245,0.06);
+  --item-sel-bg:rgba(66,165,245,0.11);
+  --item-sel-border:rgba(66,165,245,0.28);
+  --surface-raised:rgba(255,255,255,0.88);
+  --surface-muted:rgba(245,249,252,0.94);
+  --surface-emphasis:rgba(66,165,245,0.08);
   --surface-danger:rgba(220,38,38,0.08);
   --surface-warning:rgba(202,138,4,0.10);
   --surface-success:rgba(5,150,105,0.08);
-  --accent:#2563eb;
-  --accent-strong:#1d4ed8;
-  --accent-soft:rgba(37,99,235,0.10);
-  --accent-glow:rgba(37,99,235,0.18);
-  --graph-stroke:rgba(219,228,240,0.2);
-  --cy-bg:transparent; --cy-edge-label:#334155; --cy-edge-text-bg:#ffffff;
-  --cy-node-mod:#edf5ff; --cy-node-sub:#f1f4ff; --cy-node-ext:#eef3f8;
-  --accent-m:#2563eb; --accent-s:#4f46e5; --accent-e:#64748b;
+  --accent:#1e88e5;
+  --accent-strong:#1565c0;
+  --accent-soft:rgba(30,136,229,0.10);
+  --accent-glow:rgba(30,136,229,0.18);
+  --graph-stroke:rgba(208,220,231,0.18);
+  --cy-bg:transparent; --cy-edge-label:#31455f; --cy-edge-text-bg:#ffffff;
+  --cy-node-mod:#ef5350; --cy-node-sub:#f57c4d; --cy-node-ext:#ad4258;
+  --accent-m:#ef5350; --accent-s:#f57c4d; --accent-e:#ad4258;
   --path-color:#d97706;
   --path-soft:rgba(217,119,6,0.10); --path-soft2:rgba(217,119,6,0.13); --path-border:rgba(217,119,6,0.28); --path-border2:rgba(217,119,6,0.48);
-  --gold:#ca8a04; --red:#dc2626; --green:#059669; --cyan:#2563eb; --warm:#ea580c;
+  --gold:#ca8a04; --red:#dc2626; --green:#059669; --cyan:#1e88e5; --warm:#ea580c;
   --gold-soft:rgba(202,138,4,0.10); --gold-soft2:rgba(202,138,4,0.08); --gold-border:rgba(202,138,4,0.24); --gold-border2:rgba(202,138,4,0.40);
   --red-soft:rgba(220,38,38,0.10);
   --green-soft:rgba(5,150,105,0.08);
-  --muted-soft:rgba(100,116,139,0.12);
-  --accent-m-soft:rgba(37,99,235,0.12); --accent-s-soft:rgba(79,70,229,0.12); --accent-e-soft:rgba(100,116,139,0.12);
+  --muted-soft:rgba(96,115,138,0.12);
+  --accent-m-soft:rgba(239,83,80,0.12); --accent-s-soft:rgba(245,124,77,0.12); --accent-e-soft:rgba(173,66,88,0.12);
 }
 
 /* ── Base ─────────────────────────────────────────────────────────────────── */
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--sidebar-w:360px}
 html,body{height:100%;overflow:hidden;
-  background:radial-gradient(circle at top left,var(--bg-radial1),transparent 34%),
-             radial-gradient(circle at bottom right,var(--bg-radial2),transparent 30%),
+  background:radial-gradient(circle at top left,var(--bg-radial1),transparent 0%),
+             radial-gradient(circle at bottom right,var(--bg-radial2),transparent 0%),
              var(--bg-body);
   color:var(--text);font-family:"IBM Plex Sans","Segoe UI","Apple Color Emoji","Segoe UI Emoji",sans-serif;
 }
@@ -102,13 +102,7 @@ body.sidebar-open{overflow:hidden}
 .shell{position:relative;display:grid;grid-template-columns:minmax(0,1fr) var(--sidebar-w);height:100vh;transition:grid-template-columns 180ms ease}
 body.sidebar-collapsed .shell{grid-template-columns:minmax(0,1fr) 0}
 .stage{position:relative;overflow:hidden;height:100vh;border-right:1px solid var(--shell-line)}
-#cy{position:absolute;inset:0;width:100%;height:100%;background:
-  linear-gradient(var(--graph-stroke) 1px, transparent 1px),
-  linear-gradient(90deg,var(--graph-stroke) 1px, transparent 1px),
-  var(--cy-bg);
-  background-size:32px 32px,32px 32px,auto;
-  background-position:-1px -1px,-1px -1px,0 0;
-}
+#cy{position:absolute;inset:0;width:100%;height:100%;background:var(--cy-bg)}
 .appbar{position:absolute;top:18px;left:18px;right:auto;display:flex;flex-direction:column;
   align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid var(--panel-border);background:var(--panel-bg-soft);z-index:6;
   backdrop-filter:blur(12px);box-shadow:0 18px 40px rgba(2,6,23,0.14);border-radius:16px;
@@ -195,7 +189,7 @@ body.sidebar-collapsed .sidebar{border-left:none;opacity:0;pointer-events:none}
 .inspector-meta{display:flex;flex-wrap:wrap;gap:7px;padding:12px 18px;border-bottom:1px solid var(--shell-line)}
 .tabs{display:flex;gap:8px;padding:14px 18px 0;flex-shrink:0}
 .tab{flex:1;padding:11px 8px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--muted)}
-.tab.on{background:var(--accent-soft);border-color:rgba(116,163,255,0.28);color:var(--text)}
+.tab.on{background:var(--accent-soft);border-color:var(--item-sel-border);color:var(--text)}
 .body{flex:1;overflow-y:auto;padding:18px}
 .panel-section{padding:0 0 18px;margin-bottom:18px;border-bottom:1px solid var(--shell-line)}
 .panel-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:4px}
@@ -308,19 +302,11 @@ body.focus-on #perf-btn,
 body.focus-on #path-btn,
 body.focus-on .app-btn.mobile-only{display:none}
 body.performance-mode #cy{
-  background:
-    linear-gradient(var(--graph-stroke) 1px, transparent 1px),
-    linear-gradient(90deg,var(--graph-stroke) 1px, transparent 1px),
-    linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.02)),
-    #050505;
+  background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.02)), #050505;
 }
 [data-theme="light"] body.performance-mode #cy,
 body.performance-mode[data-theme="light"] #cy{
-  background:
-    linear-gradient(var(--graph-stroke) 1px, transparent 1px),
-    linear-gradient(90deg,var(--graph-stroke) 1px, transparent 1px),
-    linear-gradient(180deg,rgba(0,0,0,0.015),rgba(0,0,0,0.015)),
-    #ffffff;
+  background:linear-gradient(180deg,rgba(0,0,0,0.015),rgba(0,0,0,0.015)), #ffffff;
 }
 body.performance-mode .graph-key .key-chip{
   background:var(--surface-raised);
@@ -712,7 +698,7 @@ function buildCyStyle() {
   const edgeFontSize = Math.max(8, Math.round(10 * ts));
   const edgeLabel   = isDark ? '#ffffff' : '#000000';
   const edgeLblBg   = isDark ? '#08111f' : '#ffffff';
-  const pathColor   = perf ? (isDark ? '#ffffff' : '#000000') : (isDark ? '#f472b6' : '#db2777');
+  const pathColor   = perf ? (isDark ? '#ffffff' : '#000000') : (isDark ? '#f59e0b' : '#d97706');
   const perfBg      = isDark ? '#050505' : '#ffffff';
   const perfBorder  = isDark ? '#ffffff' : '#000000';
   const perfSoft    = isDark ? '#d4d4d4' : '#202020';
@@ -735,7 +721,7 @@ function buildCyStyle() {
       'background-repeat':'no-repeat',
       'font-family':'"IBM Plex Sans","Apple Color Emoji","Segoe UI Emoji",sans-serif',
       'font-size':'data(fontSize)','font-weight':650,
-      color:'data(labelColor)',
+      color: perf ? (isDark ? '#ffffff' : '#000000') : 'data(labelColor)',
       'text-outline-width':0,
       width:'data(w)',height:'data(h)',padding:12,
       'shadow-blur': perf ? 0 : 18,
@@ -748,25 +734,25 @@ function buildCyStyle() {
     { selector:'node[nodeType="module"]', style: perf ? {} : {
       'background-fill':'linear-gradient',
       'background-gradient-direction':'to-bottom-right',
-      'background-gradient-stop-colors': isDark ? '#244b86 #173563 #102847' : '#ffffff #edf5ff #d9e9ff',
+      'background-gradient-stop-colors': isDark ? '#42a5f5 #1e88e5 #1565c0' : '#ef5350 #e53935 #8e2a2f',
       'background-gradient-stop-positions':'0% 52% 100%',
-      'border-color':isDark ? '#79b8ff' : '#4f8fe8',
+      'border-color':isDark ? '#64b5f6' : '#f06a68',
     }},
     { selector:'node[nodeType="subroutine"]', style: perf ? {} : {
       'background-fill':'linear-gradient',
       'background-gradient-direction':'to-bottom-right',
-      'background-gradient-stop-colors': isDark ? '#60478f #3f2e6e #2d2254' : '#ffffff #f5efff #e8dcff',
+      'background-gradient-stop-colors': isDark ? '#9575cd #673ab7 #512da8' : '#f57c4d #ef6c3d #9a3d23',
       'background-gradient-stop-positions':'0% 52% 100%',
-      'border-color':isDark ? '#bda2ff' : '#8b63d9',
+      'border-color':isDark ? '#b39ddb' : '#f79a74',
     }},
     { selector:'node[nodeType="external"]', style: perf ? {
       'border-style':'solid',
     } : {
       'background-fill':'linear-gradient',
       'background-gradient-direction':'to-bottom-right',
-      'background-gradient-stop-colors': isDark ? '#8f3f68 #632b4b #461f38' : '#ffffff #fff0f7 #ffdce9',
+      'background-gradient-stop-colors': isDark ? '#26a69a #00897b #00695c' : '#ad4258 #95354a #5f2230',
       'background-gradient-stop-positions':'0% 52% 100%',
-      'border-color':isDark ? '#ff9ac4' : '#dd5a91',
+      'border-color':isDark ? '#4db6ac' : '#c7657c',
       'border-style':'solid',
     }},
     { selector:'node.sel', style:{
@@ -882,14 +868,15 @@ function syncGraph() {
   const maxD = Math.max(1, ...degs), minD = Math.min(0, ...degs);
 
   const isDark = theme === 'dark';
+  const perf = Boolean(state.performanceMode);
   // Fallback bg colors (gradient is applied via Cytoscape type selectors in buildCyStyle)
   const GRAD = {
-    module:     isDark ? { stop1:'#12335f' } : { stop1:'#eef6ff' },
-    subroutine: isDark ? { stop1:'#37246d' } : { stop1:'#f4eeff' },
-    external:   isDark ? { stop1:'#612044' } : { stop1:'#fff0f7' },
+    module:     isDark ? { stop1:'#42a5f5' } : { stop1:'#ef5350' },
+    subroutine: isDark ? { stop1:'#9575cd' } : { stop1:'#f57c4d' },
+    external:   isDark ? { stop1:'#26a69a' } : { stop1:'#ad4258' },
   };
-  const AC = { module: isDark?'#60a5fa':'#2563eb', subroutine: isDark?'#a78bfa':'#7c3aed', external: isDark?'#f472b6':'#db2777' };
-  const LABEL_COLOR = isDark ? '#ffffff' : '#000000';
+  const AC = { module: isDark?'#42a5f5':'#ef5350', subroutine: isDark?'#9575cd':'#f57c4d', external: isDark?'#26a69a':'#ad4258' };
+  const LABEL_COLOR = isDark ? '#ffffff' : (perf ? '#000000' : '#fff8f6');
   const ts = state.textScale || 1.0;
 
   const wantNodes = new Set(), wantEdges = new Set();
@@ -933,11 +920,11 @@ function syncGraph() {
   state.customEdges.forEach(e => {
     if (hidden.has(e.source)||hidden.has(e.target)) { const el=cy.getElementById(e.id); if(el.length) el.remove(); return; }
     wantEdges.add(e.id);
-    let ec = isDark?'#60a5fa':'#2563eb';
+    let ec = isDark?'#42a5f5':'#ef5350';
     if (e.style?.stroke) {
       const s=e.style.stroke;
-      if (s.includes('149,224,141')||s==='#a78bfa') ec=isDark?'#a78bfa':'#7c3aed';
-      else if (s.includes('244,114,182')||s==='#f472b6'||s==='#db2777') ec=isDark?'#f472b6':'#db2777';
+      if (s.includes('149,224,141')||s==='#a78bfa'||s==='#6e8fb0'||s==='#9575cd'||s==='#673ab7'||s==='#d84343'||s==='#f57c4d') ec=isDark?'#9575cd':'#f57c4d';
+      else if (s.includes('244,114,182')||s==='#f472b6'||s==='#db2777'||s==='#8da7b8'||s==='#26a69a'||s==='#00897b'||s==='#b23a48'||s==='#ad4258') ec=isDark?'#26a69a':'#ad4258';
     }
     const el = cy.getElementById(e.id);
     if (!el.length) {
@@ -1323,7 +1310,7 @@ function addModule(){
   const modNode=nodes.find(x=>x.data.title.toLowerCase()===title.toLowerCase());
   nodes.forEach(n=>{
     if(n.data.nodeType==='subroutine'&&n.data.parentName&&n.data.parentName.toLowerCase()===title.toLowerCase())
-      if(ensureEdge(edges,modNode.id,n.id,'contains',false,'#a78bfa')) wired++;
+      if(ensureEdge(edges,modNode.id,n.id,'contains',false,'#9575cd')) wired++;
   });
   applyState({customNodes:nodes,customEdges:edges}); inp.value='';
   if(wired) showMsg('parse-msg','Added "'+title+'" · wired '+wired+' sub(s).',true);
@@ -1343,7 +1330,7 @@ function addSubroutine(){
   if(parentId){
     const par=nodes.find(n=>n.id===parentId);
     if(par){subNode.data.parentId=par.id;subNode.data.parentName=par.data.title;
-      if(ensureEdge(edges,par.id,subNode.id,'contains',false,'#a78bfa')) wired++;}
+      if(ensureEdge(edges,par.id,subNode.id,'contains',false,'#9575cd')) wired++;}
   }
   applyState({customNodes:nodes,customEdges:edges}); inp.value=''; if(parEl) parEl.value='';
   if(wired) showMsg('parse-msg','Added "'+title+'" · wired to parent.',true);
@@ -1489,7 +1476,7 @@ async function importJSONFile(file){
       existingEdges.push({
         id,source,target,label,
         data:{isDashed:type==='use'||Boolean(e?.data?.isDashed)},
-        style:{stroke:type==='use'?'#f472b6':'#a78bfa'},
+        style:{stroke:type==='use'?'#26a69a':'#9575cd'},
       });
       addedEdges++;
     });
@@ -1544,7 +1531,7 @@ async function importJSONFile(file){
 }
 
 function exportDOT(){
-  const AC={module:theme==='dark'?'#60a5fa':'#2563eb',subroutine:theme==='dark'?'#a78bfa':'#7c3aed',external:theme==='dark'?'#f472b6':'#db2777'};
+  const AC={module:theme==='dark'?'#42a5f5':'#ef5350',subroutine:theme==='dark'?'#9575cd':'#f57c4d',external:theme==='dark'?'#26a69a':'#ad4258'};
   let dot='digraph fortran_deps {\n  rankdir=LR;\n  node [shape=box style=filled fontname="monospace"];\n';
   state.customNodes.forEach(n=>{const c=AC[n.data.nodeType]||'#aaa';dot+=`  "${n.data.title}" [fillcolor="${c}" label="${n.data.title}\\n(${n.data.nodeType})"];\n`;});
   state.customEdges.forEach(e=>{const sn=state.customNodes.find(n=>n.id===e.source),tn=state.customNodes.find(n=>n.id===e.target);if(!sn||!tn)return;dot+=`  "${sn.data.title}" -> "${tn.data.title}"${e.label?' [label="'+e.label+'"]':''};\n`;});
@@ -1560,7 +1547,7 @@ function renderBrowseTab(){
   const hidden=new Set(state.hiddenNodeIds);
   const filtered=state.customNodes.filter(n=>n.data.title.toLowerCase().includes(nodeQuery.toLowerCase()));
   const isDark=theme==='dark';
-  const AC={module:isDark?'#60a5fa':'#2563eb',subroutine:isDark?'#a78bfa':'#7c3aed',external:isDark?'#f472b6':'#db2777'};
+  const AC={module:isDark?'#42a5f5':'#ef5350',subroutine:isDark?'#9575cd':'#f57c4d',external:isDark?'#26a69a':'#ad4258'};
   return `
 <section class="panel-section sticky-search">
   <div class="section-head"><div class="section-title">Browse graph</div></div>
@@ -1658,8 +1645,8 @@ function renderInspectTab(){
   const quickJumpCustomized = Array.isArray(state.quickJumpIds);
   const isInQuickJump = selectedId ? getQuickJumpNodes().some(n => n.id === selectedId) : false;
   const isDark=theme==='dark';
-  const AC={module:isDark?'#60a5fa':'#2563eb',subroutine:isDark?'#a78bfa':'#7c3aed',external:isDark?'#f472b6':'#db2777'};
-  const ABG={module:isDark?'rgba(96,165,250,.16)':'rgba(37,99,235,.10)',subroutine:isDark?'rgba(167,139,250,.16)':'rgba(124,58,237,.10)',external:isDark?'rgba(244,114,182,.16)':'rgba(219,39,119,.10)'};
+  const AC={module:isDark?'#42a5f5':'#ef5350',subroutine:isDark?'#9575cd':'#f57c4d',external:isDark?'#26a69a':'#ad4258'};
+  const ABG={module:isDark?'rgba(66,165,245,.16)':'rgba(239,83,80,.12)',subroutine:isDark?'rgba(149,117,205,.16)':'rgba(245,124,77,.12)',external:isDark?'rgba(38,166,154,.16)':'rgba(173,66,88,.12)'};
   const renderRelation = (edge, otherNodeId, direction) => {
     const other = state.customNodes.find(n => n.id === otherNodeId);
     if (!other) return '';
@@ -1781,6 +1768,7 @@ function togglePerformanceMode(){
   state.performanceMode=!state.performanceMode;
   saveState();
   cy.style(buildCyStyle());
+  syncGraph();
   applyHighlight();
   renderAppChrome();
   renderToolbar();

@@ -10,8 +10,8 @@ It consists of two independent components:
 The Python parser has no third-party dependencies, and the viewer does not require a backend server.
 
 <p align="center">
-  <a href="assets/light_theme.png">
-    <img src="assets/light_theme.png"
+  <a href="assets/light_theme_large.png">
+    <img src="assets/light_theme_large.png"
          alt="FortGraph interface"
          width="900">
   </a>
@@ -59,7 +59,7 @@ click on the panels to zoom.
 <table>
   <tr>
     <td align="center"><strong>Dark theme</strong></td>
-    <td align="center"><strong>Highlight workflow</strong></td>
+    <td align="center"><strong>Light theme</strong></td>
   </tr>
   <tr>
     <td>
@@ -68,9 +68,9 @@ click on the panels to zoom.
            alt="FortGraph dark theme">
     </td>
     <td>
-      <a href="assets/highlight2.png">
-      <img src="assets/highlight2.png"
-           alt="Highlight a workflow">
+      <a href="assets/light_theme.png">
+      <img src="assets/light_theme.png"
+           alt="Light theme">
     </td>
   </tr>
 </table>
@@ -96,14 +96,33 @@ click on the panels to zoom.
 
 <table>
   <tr>
-    <td align="center"><strong>Minimal display</strong></td>
-    <td align="center"><strong>Focus mode</strong></td>
+    <td align="center"><strong>Minimal display 1</strong></td>
+    <td align="center"><strong>Minimal display 2</strong></td>
   </tr>
   <tr>
     <td>
       <a href="assets/minimal_dark.png">
       <img src="assets/minimal_dark.png"
            alt="Dark Performance mode">
+    </td>
+    <td>
+      <a href="assets/light_minimal.png">
+      <img src="assets/light_minimal.png"
+           alt="Minimal light theme">
+    </td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td align="center"><strong>Highlight</strong></td>
+    <td align="center"><strong>Focus mode</strong></td>
+  </tr>
+  <tr>
+    <td>
+      <a href="assets/highlight.png">
+      <img src="assets/highlight.png"
+           alt="Highlight workflow">
     </td>
     <td>
       <a href="assets/minimal_light_w_focus.png">
