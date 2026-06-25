@@ -111,14 +111,14 @@ body.sidebar-collapsed .shell{grid-template-columns:minmax(0,1fr) 0}
 .appbar{position:absolute;top:18px;left:18px;right:auto;display:flex;flex-direction:column;
   align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid var(--panel-border);background:var(--panel-bg-soft);z-index:6;
   backdrop-filter:blur(12px);box-shadow:0 18px 40px rgba(2,6,23,0.14);border-radius:16px;
-  width:min(430px,calc(100vw - 336px));
+  width:min(340px,calc(100vw - 336px));
   max-width:calc(100vw - 336px);
   animation:barIn 360ms ease}
 .brand-block{display:flex;flex-direction:column;gap:4px;min-width:0}
 .brand-kicker{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
 .brand-title{font-size:20px;line-height:.98;font-weight:700;letter-spacing:-.04em;overflow-wrap:anywhere}
 .brand-copy{display:none}
-.appbar-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-width:0;font-size:12px;line-height:1.35;color:var(--muted-strong)}
+.appbar-meta{display:flex;flex-wrap:wrap;align-items:center;gap:11px;min-width:0;font-size:12px;line-height:1.35;color:var(--muted-strong)}
 .appbar-meta strong{font-size:12px;color:var(--text)}
 .meta-sep{opacity:.45}
 .appbar-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;flex-shrink:0;min-width:0}
@@ -168,6 +168,16 @@ body.sidebar-collapsed .collapsed-hint{display:block}
 .key-chip{display:inline-flex;align-items:center;gap:7px;padding:8px 11px;border-radius:999px;border:1px solid var(--panel-border);
   background:var(--panel-bg-soft);backdrop-filter:blur(10px);font-size:11px;color:var(--muted-strong)}
 .leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.stage-empty{position:absolute;inset:0;display:grid;place-items:center;padding:32px;pointer-events:none;z-index:2;
+  opacity:0;transition:opacity 180ms ease}
+.stage-empty.is-visible{opacity:1}
+.stage-empty-copy{max-width:540px;text-align:center;padding:22px 24px;border-radius:24px;
+  background:rgba(255,255,255,0.02);
+  border:1px solid var(--panel-border);backdrop-filter:blur(10px);box-shadow:0 16px 40px rgba(2,6,23,0.06)}
+.stage-empty-kicker{margin-bottom:10px;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.stage-empty-title{font-size:clamp(20px,2.6vw,30px);line-height:1.08;letter-spacing:-.04em;font-weight:700;color:var(--text)}
+.stage-empty-body{margin-top:10px;font-size:13px;line-height:1.6;color:var(--muted-strong)}
+.stage-empty-body code{padding:2px 6px;border-radius:999px;background:var(--surface-emphasis);color:var(--text);font-family:inherit;font-weight:700}
 
 /* ── Sidebar / inspector ─────────────────────────────────────────────────── */
 .sidebar{background:var(--panel-bg);display:flex;flex-direction:column;overflow:hidden;z-index:7;min-width:0}
@@ -285,6 +295,7 @@ body.focus-on .appbar-meta,
 body.focus-on .appbar-controls,
 body.focus-on #theme-btn,
 body.focus-on #perf-btn,
+body.focus-on #path-btn,
 body.focus-on .app-btn.mobile-only{display:none}
 body.performance-mode #cy{
   background:
@@ -455,12 +466,20 @@ body.performance-mode[data-theme="light"]{
       <div class="appbar-actions">
         <button class="app-btn mobile-only" type="button" onclick="toggleSidebar(true)">Inspect</button>
         <button class="app-btn" type="button" onclick="toggleTheme()" id="theme-btn">☀ Light</button>
-        <button class="app-btn" type="button" onclick="togglePerformanceMode()" id="perf-btn">Performance</button>
+        <button class="app-btn" type="button" onclick="togglePerformanceMode()" id="perf-btn">Minimal</button>
         <button class="app-btn focus-btn" type="button" onclick="toggleFocusMode()" id="focus-btn">Focus</button>
+        <button class="app-btn" type="button" onclick="togglePathMode()" id="path-btn">Path</button>
       </div>
       <div class="appbar-controls" id="appbar-controls"></div>
     </header>
     <div id="cy"></div>
+    <div class="stage-empty" id="stage-empty" aria-live="polite">
+      <div class="stage-empty-copy">
+        <div class="stage-empty-kicker">Graph Empty</div>
+        <div class="stage-empty-title">Start by building the first node.</div>
+        <div class="stage-empty-body">Use <code>Build</code> on the right sidebar to create nodes or import a JSON with graph data.</div>
+      </div>
+    </div>
     <div class="control-rail" id="toolbar"></div>
     <div class="graph-key" id="legend"></div>
   </div>
@@ -1063,11 +1082,17 @@ function graphStats(){
   return { total, hidden, visible, modules, subs, external, edges: state.customEdges.length, path: pathSet.size };
 }
 
+function renderStageEmptyState() {
+  const empty = document.getElementById('stage-empty');
+  if (!empty) return;
+  empty.classList.toggle('is-visible', state.customNodes.length === 0);
+}
+
 function maybePromptPerformanceMode() {
   if (performanceReminderShown || state.performanceMode || state.customNodes.length < 50) return;
   performanceReminderShown = true;
   setTimeout(() => {
-    if (confirm('Large graph detected (50+ nodes). Enable Performance mode for a simpler, faster graph view?')) {
+    if (confirm('Large graph detected (50+ nodes). Enable Minimal mode for a simpler, faster graph view?')) {
       togglePerformanceMode();
     }
   }, 0);
@@ -1081,29 +1106,29 @@ function renderAppChrome(){
   const legend = document.getElementById('legend');
   const perfBtn = document.getElementById('perf-btn');
   const focusBtn = document.getElementById('focus-btn');
+  const pathBtn = document.getElementById('path-btn');
   const zoomLevel = cy ? cy.zoom() : 1;
   document.body.classList.toggle('focus-on', state.focusMode);
   document.body.classList.toggle('performance-mode', Boolean(state.performanceMode));
   if (perfBtn) {
     perfBtn.classList.toggle('on', Boolean(state.performanceMode));
-    perfBtn.textContent = state.performanceMode ? 'Performance on' : 'Performance';
+    perfBtn.textContent = state.performanceMode ? 'Minimal on' : 'Minimal';
   }
   if (focusBtn) {
     focusBtn.classList.toggle('on', Boolean(state.focusMode));
-    focusBtn.textContent = state.focusMode ? 'Exit focus' : 'Focus mode';
+    focusBtn.textContent = state.focusMode ? 'Exit focus' : 'Focus';
+  }
+  if (pathBtn) {
+    pathBtn.classList.toggle('on', Boolean(pathMode));
+    pathBtn.textContent = pathMode ? `Path ${pathSet.size}` : 'Path';
   }
   appMeta.innerHTML = `
     <strong>${stats.total}</strong> nodes <span class="meta-sep">|</span>
     <strong>${stats.visible}</strong> visible <span class="meta-sep">|</span>
     <strong>${stats.hidden}</strong> hidden <span class="meta-sep">|</span>
-    <strong>${stats.edges}</strong> edges${pathMode?` <span class="meta-sep">|</span> <strong>${stats.path}</strong> in path`:''}`;
+    <strong>${stats.edges}</strong> edges`;
   if (appControls) {
     appControls.innerHTML = `
-      <div class="appbar-control-row compact">
-        <button class="app-btn${pathMode ? ' on' : ''}" type="button" onclick="togglePathMode()">${pathMode ? `Path ${pathSet.size}` : 'Path mode'}</button>
-        <button class="app-btn" type="button" onclick="undo()" ${!undoStack.length ? 'disabled' : ''}>Undo</button>
-        <button class="app-btn" type="button" onclick="redo()" ${!redoStack.length ? 'disabled' : ''}>Redo</button>
-      </div>
       <div class="appbar-control-row">
         <div class="appbar-slider">
           <label for="text-scale-slider">Labels</label>
@@ -1127,12 +1152,12 @@ function renderAppChrome(){
   legend.innerHTML = `
     <div class="key-chip"><span class="leg-dot" style="background:var(--accent-m)"></span>🧩 Module</div>
     <div class="key-chip"><span class="leg-dot" style="background:var(--accent-s)"></span>⚙️ Subroutine</div>
-    <div class="key-chip"><span class="leg-dot" style="background:var(--accent-e)"></span>📦 External</div>
-    <div class="key-chip"><span class="leg-dot" style="background:var(--path-color)"></span>Path selection</div>`;
+    <div class="key-chip"><span class="leg-dot" style="background:var(--accent-e)"></span>📦 External</div>`;
 }
 
 function renderSidebar(){
   renderAppChrome();
+  renderStageEmptyState();
   document.getElementById('tabs').innerHTML=TABS.map(([id,label])=>
     `<button class="tab${activeTab===id?' on':''}" onclick="setTab('${id}')">${label}</button>`).join('');
   const panel=document.getElementById('panel');
