@@ -547,11 +547,12 @@ function loadState() {
       focusMode:     Boolean(p.focusMode),
       textScale:     typeof p.textScale==='number' ? p.textScale : 1.0,
       performanceMode: Boolean(p.performanceMode),
+      quickJumpIds:  Array.isArray(p.quickJumpIds) ? p.quickJumpIds : null,
     };
   } catch { return fresh(); }
 }
 function fresh() {
-  return { customNodes:[], customEdges:[], nodePositions:{}, hiddenNodeIds:[], perNode:{}, global:'', focusMode:false, textScale:1.0, performanceMode:false };
+  return { customNodes:[], customEdges:[], nodePositions:{}, hiddenNodeIds:[], perNode:{}, global:'', focusMode:false, textScale:1.0, performanceMode:false, quickJumpIds:null };
 }
 function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 function snapState() {
@@ -1613,7 +1614,38 @@ function toggleHide(id){
   if(pathSet.has(id)){pathSet.delete(id);applyHighlight();}
 }
 function showAllNodes(){applyState({hiddenNodeIds:[]});}
-function clearAll(){if(!confirm('Clear all nodes and edges?'))return;applyState({customNodes:[],customEdges:[],nodePositions:{},hiddenNodeIds:[]});selectedId=null;pathSet.clear();activeTab='build';}
+function clearAll(){if(!confirm('Clear all nodes and edges?'))return;applyState({customNodes:[],customEdges:[],nodePositions:{},hiddenNodeIds:[],quickJumpIds:null});selectedId=null;pathSet.clear();activeTab='build';}
+
+function getDefaultQuickJumpIds(){
+  const hidden = new Set(state.hiddenNodeIds);
+  return state.customNodes.filter(n=>!hidden.has(n.id)).slice(0,12).map(n=>n.id);
+}
+
+function getQuickJumpNodes(){
+  const hidden = new Set(state.hiddenNodeIds);
+  const ids = Array.isArray(state.quickJumpIds) ? state.quickJumpIds : getDefaultQuickJumpIds();
+  return ids
+    .map(id => state.customNodes.find(n => n.id === id))
+    .filter(n => n && !hidden.has(n.id));
+}
+
+function customizeQuickJump(mutator){
+  const base = Array.isArray(state.quickJumpIds) ? [...state.quickJumpIds] : getDefaultQuickJumpIds();
+  const next = mutator(base.filter((id, idx, arr) => arr.indexOf(id) === idx));
+  applyState({quickJumpIds: next});
+}
+
+function addToQuickJump(id){
+  customizeQuickJump(ids => ids.includes(id) ? ids : [...ids, id]);
+}
+
+function removeFromQuickJump(id){
+  customizeQuickJump(ids => ids.filter(x => x !== id));
+}
+
+function resetQuickJump(){
+  applyState({quickJumpIds: null});
+}
 
 // ── Inspect tab ──────────────────────────────────────────────────────────────
 function renderInspectTab(){
@@ -1623,6 +1655,8 @@ function renderInspectTab(){
   const isP=selectedId?pathSet.has(selectedId):false;
   const nodeNote=(state.perNode||{})[selectedId]||'';
   const globalNote=state.global||'';
+  const quickJumpCustomized = Array.isArray(state.quickJumpIds);
+  const isInQuickJump = selectedId ? getQuickJumpNodes().some(n => n.id === selectedId) : false;
   const isDark=theme==='dark';
   const AC={module:isDark?'#60a5fa':'#2563eb',subroutine:isDark?'#a78bfa':'#7c3aed',external:isDark?'#f472b6':'#db2777'};
   const ABG={module:isDark?'rgba(96,165,250,.16)':'rgba(37,99,235,.10)',subroutine:isDark?'rgba(167,139,250,.16)':'rgba(124,58,237,.10)',external:isDark?'rgba(244,114,182,.16)':'rgba(219,39,119,.10)'};
@@ -1683,6 +1717,8 @@ ${isH?`<div class="hbanner">Hidden from canvas.</div>`:''}
   <div class="dacts">
     <button class="btn" onclick="selectNodeById('${selectedId}')" ${isH?'disabled':''}>Focus</button>
     <button class="btn" onclick="renameNode('${selectedId}')">Rename</button>
+    <button class="btn" onclick="${isInQuickJump ? `removeFromQuickJump('${selectedId}')` : `addToQuickJump('${selectedId}')`}">${isInQuickJump?'Remove from quick jump':'Add to quick jump'}</button>
+    ${quickJumpCustomized?`<button class="btn" onclick="resetQuickJump()">Reset quick jump</button>`:''}
     <button class="btn" onclick="toggleHide('${selectedId}')" title="Cmd+H">${isH?'Show':'Hide'}</button>
     <button class="btn btn-danger" onclick="deleteNode('${selectedId}')" title="Del">Delete</button>
   </div>
@@ -1706,10 +1742,10 @@ ${isH?`<div class="hbanner">Hidden from canvas.</div>`:''}
 </div></section>`;
   }
 
-  const visible=state.customNodes.filter(n=>!hidden.has(n.id));
-  if(visible.length){
-    html+=`<section class="panel-section"><div class="section-head"><div class="section-title">Quick jump</div></div><div class="quick-grid">
-    ${visible.slice(0,12).map(n=>`<button class="btn" style="text-align:left;font-size:11px;padding:6px 9px" onclick="selectNodeById('${n.id}')">
+  const quickJumpNodes=getQuickJumpNodes();
+  if(quickJumpNodes.length){
+    html+=`<section class="panel-section"><div class="section-head"><div class="section-title">Quick jump</div>${Array.isArray(state.quickJumpIds)?`<button class="btn" style="padding:7px 9px;font-size:10px" onclick="resetQuickJump()">Reset</button>`:''}</div><div class="quick-grid">
+    ${quickJumpNodes.map(n=>`<button class="btn" style="text-align:left;font-size:11px;padding:6px 9px" onclick="selectNodeById('${n.id}')">
       <strong style="display:block;font-size:11px;line-height:1.35;white-space:normal;overflow-wrap:anywhere;word-break:break-word">${typeIcon(n.data.nodeType)} ${esc(n.data.title)}</strong>
       <span style="color:var(--muted);font-size:10px;display:block;margin-top:3px;white-space:normal;overflow-wrap:anywhere">${n.data.nodeType}</span>
     </button>`).join('')}</div></section>`;
@@ -1725,7 +1761,8 @@ function renameNode(id){
 function deleteNode(id){
   applyState({customNodes:state.customNodes.filter(n=>n.id!==id),
     customEdges:state.customEdges.filter(e=>e.source!==id&&e.target!==id),
-    hiddenNodeIds:state.hiddenNodeIds.filter(x=>x!==id)});
+    hiddenNodeIds:state.hiddenNodeIds.filter(x=>x!==id),
+    quickJumpIds:Array.isArray(state.quickJumpIds)?state.quickJumpIds.filter(x=>x!==id):state.quickJumpIds});
   if(selectedId===id) selectedId=null;
   pathSet.delete(id); applyHighlight();
 }

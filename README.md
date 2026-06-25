@@ -32,6 +32,10 @@ The Python parser has no third-party dependencies, and the viewer does not requi
 - Supports additive JSON import.
 - Provides multiple graph layouts.
 - Supports node search, hiding, notes, path highlighting, undo/redo, and JSON/DOT export.
+- Parses pasted `USE` blocks in the viewer, including `USE ... ONLY:` statements, multiline continuations, and inline-comment stripping.
+- Lets you resize the right sidebar to make long module and subroutine names easier to inspect.
+- Shows detailed incoming and outgoing relationship labels in the **Inspect** tab, including `USE` and `ONLY:` edges in Minimal mode.
+- Allows the Quick Jump list to be customized by adding or removing nodes while preserving the automatic default behavior.
 - Includes an optional Performance mode for large graphs, with a simplified monochrome view and faster interaction.
 - Runs locally so source code does not need to be uploaded to a remote service.
 
@@ -367,37 +371,45 @@ Then open `FortGraph.html` and import the generated JSON.
 
 ## Using the interactive viewer
 
-### Add tab
+### Build tab
 
-Use the **Add** tab to:
+Use the **Build** tab to:
 
 - add modules manually,
 - add subroutines manually,
-- parse pasted `USE` statements,
+- parse pasted `USE` statements, including `USE ... ONLY:` imports,
+- handle multiline `USE` statements with continuation markers and ignore inline `!` comments,
 - import JSON,
 - export JSON,
 - export DOT,
 - clear cached graph data.
 
-### Nodes tab
+### Browse tab
 
-Use the **Nodes** tab to:
+Use the **Browse** tab to:
 
 - search nodes,
 - select a node,
 - hide or restore nodes,
 - identify modules, procedures, and external references.
 
-### Detail tab
+### Inspect tab
 
-Use the **Detail** tab to:
+Use the **Inspect** tab to:
 
 - inspect incoming and outgoing dependencies,
+- view relationship labels such as `USE`, `ONLY: symbol`, and containment links even in Minimal mode,
 - rename nodes,
 - hide or delete nodes,
+- add or remove the selected node from the Quick Jump list,
+- reset a customized Quick Jump list back to the automatic default,
 - add per-node notes,
 - add global notes,
 - enable focus mode.
+
+### Sidebar sizing
+
+On desktop, the right sidebar can be resized by dragging its left-edge handle. This is useful when working with long module or subroutine names that would otherwise wrap or truncate in the **Browse**, **Inspect**, or **Quick Jump** sections.
 
 ### Layouts
 
