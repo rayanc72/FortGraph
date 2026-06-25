@@ -91,6 +91,7 @@
 
 /* ── Base ─────────────────────────────────────────────────────────────────── */
 *{box-sizing:border-box;margin:0;padding:0}
+:root{--sidebar-w:360px}
 html,body{height:100%;overflow:hidden;
   background:radial-gradient(circle at top left,var(--bg-radial1),transparent 34%),
              radial-gradient(circle at bottom right,var(--bg-radial2),transparent 30%),
@@ -98,7 +99,7 @@ html,body{height:100%;overflow:hidden;
   color:var(--text);font-family:"IBM Plex Sans","Segoe UI","Apple Color Emoji","Segoe UI Emoji",sans-serif;
 }
 body.sidebar-open{overflow:hidden}
-.shell{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 360px;height:100vh;transition:grid-template-columns 180ms ease}
+.shell{position:relative;display:grid;grid-template-columns:minmax(0,1fr) var(--sidebar-w);height:100vh;transition:grid-template-columns 180ms ease}
 body.sidebar-collapsed .shell{grid-template-columns:minmax(0,1fr) 0}
 .stage{position:relative;overflow:hidden;height:100vh;border-right:1px solid var(--shell-line)}
 #cy{position:absolute;inset:0;width:100%;height:100%;background:
@@ -111,14 +112,14 @@ body.sidebar-collapsed .shell{grid-template-columns:minmax(0,1fr) 0}
 .appbar{position:absolute;top:18px;left:18px;right:auto;display:flex;flex-direction:column;
   align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid var(--panel-border);background:var(--panel-bg-soft);z-index:6;
   backdrop-filter:blur(12px);box-shadow:0 18px 40px rgba(2,6,23,0.14);border-radius:16px;
-  width:min(340px,calc(100vw - 336px));
-  max-width:calc(100vw - 336px);
+  width:min(350px,calc(100vw - var(--sidebar-w) - 32px));
+  max-width:calc(100vw - var(--sidebar-w) - 32px);
   animation:barIn 360ms ease}
 .brand-block{display:flex;flex-direction:column;gap:4px;min-width:0}
 .brand-kicker{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
 .brand-title{font-size:20px;line-height:.98;font-weight:700;letter-spacing:-.04em;overflow-wrap:anywhere}
 .brand-copy{display:none}
-.appbar-meta{display:flex;flex-wrap:wrap;align-items:center;gap:11px;min-width:0;font-size:12px;line-height:1.35;color:var(--muted-strong)}
+.appbar-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-width:0;font-size:12px;line-height:1.35;color:var(--muted-strong)}
 .appbar-meta strong{font-size:12px;color:var(--text)}
 .meta-sep{opacity:.45}
 .appbar-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;flex-shrink:0;min-width:0}
@@ -180,7 +181,10 @@ body.sidebar-collapsed .collapsed-hint{display:block}
 .stage-empty-body code{padding:2px 6px;border-radius:999px;background:var(--surface-emphasis);color:var(--text);font-family:inherit;font-weight:700}
 
 /* ── Sidebar / inspector ─────────────────────────────────────────────────── */
-.sidebar{background:var(--panel-bg);display:flex;flex-direction:column;overflow:hidden;z-index:7;min-width:0}
+.sidebar{background:var(--panel-bg);display:flex;flex-direction:column;overflow:hidden;z-index:7;min-width:0;position:relative}
+.sidebar-resize{position:absolute;left:0;top:0;bottom:0;width:12px;transform:translateX(-50%);cursor:col-resize;z-index:9}
+.sidebar-resize::before{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:4px;height:68px;border-radius:999px;background:var(--panel-border-strong);opacity:.8;transition:background 140ms ease,opacity 140ms ease}
+.sidebar-resize:hover::before,.sidebar-resize.dragging::before{background:var(--accent);opacity:1}
 body.sidebar-collapsed .sidebar{border-left:none;opacity:0;pointer-events:none}
 .sidebar-header{padding:18px 18px 14px;border-bottom:1px solid var(--shell-line);display:flex;justify-content:space-between;gap:12px}
 .sidebar-copy{min-width:0}
@@ -268,6 +272,12 @@ textarea.fi{resize:vertical;min-height:84px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{display:inline-flex;align-items:center;padding:6px 9px;border-radius:999px;border:1px solid transparent;font-size:11px;cursor:pointer}
 .chip:hover{border-color:currentColor}
+.relation-list{display:flex;flex-direction:column;gap:8px}
+.relation-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;border-radius:12px;border:1px solid var(--panel-border);background:var(--surface-raised)}
+.relation-node{display:inline-flex;align-items:center;gap:8px;min-width:0;font-size:12px;font-weight:600;cursor:pointer}
+.relation-node:hover{text-decoration:underline}
+.relation-node-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.relation-label{flex-shrink:0;padding:4px 8px;border-radius:999px;background:var(--surface-muted);border:1px solid var(--panel-border);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-strong)}
 .dtitle{overflow-wrap:anywhere;word-break:break-word}
 .dacts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .nshell{margin-top:14px;padding:14px;border-radius:16px;border:1px solid var(--panel-border);background:var(--surface-muted)}
@@ -414,8 +424,7 @@ body.performance-mode[data-theme="light"]{
 }
 @keyframes barIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:1200px){
-  .shell{grid-template-columns:minmax(0,1fr) 332px}
-  .appbar{max-width:calc(100vw - 318px)}
+  .appbar{max-width:calc(100vw - var(--sidebar-w) - 32px)}
 }
 @media(max-width:980px){
   html,body{overflow:auto}
@@ -434,6 +443,7 @@ body.performance-mode[data-theme="light"]{
   body.sidebar-open .sidebar-scrim{opacity:1;pointer-events:auto}
   .sidebar{position:fixed;left:0;right:0;bottom:0;height:min(78vh,760px);border-top-left-radius:22px;border-top-right-radius:22px;
     border:1px solid var(--panel-border-strong);border-bottom:none;transform:translateY(calc(100% + 12px));transition:transform 220ms ease;z-index:9}
+  .sidebar-resize{display:none}
   body.sidebar-open .sidebar{transform:translateY(0)}
   .sidebar-close{display:inline-flex}
   .body{padding:16px}
@@ -485,6 +495,7 @@ body.performance-mode[data-theme="light"]{
   </div>
   <button class="sidebar-scrim" id="sidebar-scrim" type="button" aria-label="Close inspector" onclick="toggleSidebar(false)"></button>
   <aside class="sidebar" id="sidebar">
+    <button class="sidebar-resize" id="sidebar-resize" type="button" aria-label="Resize sidebar" title="Drag to resize sidebar"></button>
     <div class="sidebar-header">
       <div class="sidebar-copy">
         <h2 class="sidebar-title"></h2>
@@ -1039,12 +1050,65 @@ function ensureEdge(edges,source,target,label,isDashed,colorHint){
   return true;
 }
 
+function normalizeUseStatements(text){
+  const statements = [];
+  let buffer = '';
+  let pendingUse = false;
+  let malformed = 0;
+  text.split('\n').forEach(rawLine => {
+    const line = rawLine.replace(/!.*$/, '').trim();
+    if (!line) return;
+
+    if (!pendingUse) {
+      if (!/^use\b/i.test(line)) return;
+      buffer = line;
+      pendingUse = true;
+    } else {
+      buffer += ' ' + line.replace(/^&\s*/, '');
+    }
+
+    if (/&\s*$/.test(buffer)) {
+      buffer = buffer.replace(/\s*&\s*$/, '').trim();
+      return;
+    }
+
+    statements.push(buffer.trim());
+    buffer = '';
+    pendingUse = false;
+  });
+
+  if (pendingUse && buffer) malformed++;
+  return { statements, malformed };
+}
+
+function parseUseClause(line){
+  const match = line.match(/^use\s+([\w_]+)(?:\s*,\s*only\s*:\s*(.+))?$/i);
+  if (!match) return null;
+  return {
+    moduleName: match[1].trim(),
+    onlySymbols: match[2] ? match[2].split(',').map(s => s.trim()).filter(Boolean) : []
+  };
+}
+
 // ── Sidebar ───────────────────────────────────────────────────────────────────
+const DEFAULT_SIDEBAR_WIDTH = 360;
+const MIN_SIDEBAR_WIDTH = 320;
+const MAX_SIDEBAR_WIDTH = 680;
 let activeTab='build', nodeQuery='', sidebarOpen=false, sidebarCollapsed=false;
+let sidebarWidth = Number(localStorage.getItem('fdt-sidebar-width')) || DEFAULT_SIDEBAR_WIDTH;
 function isMobileLayout(){ return window.matchMedia('(max-width: 980px)').matches; }
 function toggleSidebar(force){
   sidebarOpen = typeof force === 'boolean' ? force : !sidebarOpen;
   document.body.classList.toggle('sidebar-open', sidebarOpen && isMobileLayout());
+}
+function clampSidebarWidth(width) {
+  const maxAllowed = Math.min(MAX_SIDEBAR_WIDTH, Math.max(MIN_SIDEBAR_WIDTH, window.innerWidth - 280));
+  return Math.max(MIN_SIDEBAR_WIDTH, Math.min(maxAllowed, width));
+}
+function applySidebarWidth() {
+  sidebarWidth = clampSidebarWidth(sidebarWidth || DEFAULT_SIDEBAR_WIDTH);
+  document.documentElement.style.setProperty('--sidebar-w', `${sidebarWidth}px`);
+  localStorage.setItem('fdt-sidebar-width', String(sidebarWidth));
 }
 function applySidebarCollapsed() {
   document.body.classList.toggle('sidebar-collapsed', sidebarCollapsed && !isMobileLayout());
@@ -1053,6 +1117,31 @@ function applySidebarCollapsed() {
     toggle.textContent = sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar';
     toggle.setAttribute('aria-label', sidebarCollapsed ? 'Expand inspector' : 'Collapse inspector');
   }
+}
+function initSidebarResize() {
+  const handle = document.getElementById('sidebar-resize');
+  if (!handle) return;
+  const stopDrag = () => {
+    handle.classList.remove('dragging');
+    window.removeEventListener('pointermove', onMove);
+    window.removeEventListener('pointerup', stopDrag);
+  };
+  const onMove = (event) => {
+    if (isMobileLayout() || sidebarCollapsed) return;
+    sidebarWidth = clampSidebarWidth(window.innerWidth - event.clientX);
+    applySidebarWidth();
+    if (cy) {
+      cy.resize();
+      refreshZoomBounds();
+    }
+  };
+  handle.addEventListener('pointerdown', event => {
+    if (isMobileLayout() || sidebarCollapsed) return;
+    event.preventDefault();
+    handle.classList.add('dragging');
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', stopDrag);
+  });
 }
 function toggleSidebarCollapsed(force) {
   sidebarCollapsed = typeof force === 'boolean' ? force : !sidebarCollapsed;
@@ -1065,6 +1154,7 @@ function setTab(t){
 }
 window.addEventListener('resize', ()=>{
   document.body.classList.toggle('sidebar-open', sidebarOpen && isMobileLayout());
+  applySidebarWidth();
   applySidebarCollapsed();
   cy.resize();
   refreshZoomBounds();
@@ -1192,7 +1282,7 @@ function renderBuildTab(){
 </section>
 <section class="panel-section">
   <div class="section-head"><div class="section-title">Parse imports</div></div>
-  <textarea class="fi" id="use-txt" placeholder="USE physics_mod, ONLY: density&#10;USE io_mod&#10;USE constants_mod, ONLY: pi, hbar"></textarea>
+  <textarea class="fi" id="use-txt" style="width:100%" placeholder="USE physics_mod, ONLY: density&#10;USE io_mod&#10;USE constants_mod, ONLY: pi, hbar"></textarea>
   <div class="row" style="margin-top:8px">
     <select class="fi" id="use-src">
       <option value="">— attach to node —</option>
@@ -1261,17 +1351,18 @@ function addSubroutine(){
 function parseUse(){
   const txt=document.getElementById('use-txt'),srcEl=document.getElementById('use-src');
   if(!txt||!txt.value.trim()) return;
-  const lines=txt.value.split('\n').map(l=>l.trim()).filter(l=>/^use\b/i.test(l));
+  const parsedInput = normalizeUseStatements(txt.value);
+  const lines = parsedInput.statements;
   if(!lines.length){showMsg('parse-msg','No USE statements found.');return;}
   const nodes=state.customNodes.map(n=>({...n,data:{...n.data}}));
   const edges=[...state.customEdges]; const msgs=[];
-  let addedN=0,addedE=0,skip=0;
+  let addedN=0,addedE=0,skip=0,malformed=parsedInput.malformed;
   const srcNode=srcEl&&srcEl.value?nodes.find(n=>n.id===srcEl.value):null;
   lines.forEach(line=>{
-    const m=line.match(/USE\s+([\w_]+)(?:\s*,\s*ONLY\s*:\s*(.+))?/i);
-    if(!m) return;
-    const modTitle=m[1].trim();
-    const onlySyms=m[2]?m[2].split(',').map(s=>s.trim()).filter(Boolean):[];
+    const parsedLine = parseUseClause(line);
+    if(!parsedLine){malformed++;return;}
+    const modTitle=parsedLine.moduleName;
+    const onlySyms=parsedLine.onlySymbols;
     const prev=nodes.length;
     const modNode=ensureModule(nodes,edges,modTitle,msgs);
     if(nodes.length>prev) addedN++;
@@ -1279,15 +1370,13 @@ function parseUse(){
       if(ensureEdge(edges,srcNode.id,modNode.id,'USE',true)) addedE++; else skip++;
     }
     onlySyms.forEach(sym=>{
-      const prev2=nodes.length;
-      const subNode=ensureSubroutine(nodes,edges,sym,msgs);
-      if(nodes.length>prev2) addedN++;
-      if(srcNode){if(ensureEdge(edges,srcNode.id,subNode.id,'ONLY: '+sym,true)) addedE++; else skip++;}
-      ensureEdge(edges,subNode.id,modNode.id,'in',false,'#a78bfa');
+      if(srcNode){
+        if(ensureEdge(edges,srcNode.id,modNode.id,'ONLY: '+sym,true)) addedE++; else skip++;
+      }
     });
   });
   applyState({customNodes:nodes,customEdges:edges});
-  showMsg('parse-msg',lines.length+' stmt(s) · '+addedN+' node(s) · '+addedE+' edge(s)'+(skip?' · '+skip+' dup':'')+(msgs.length?'\n'+msgs.join('\n'):''),true);
+  showMsg('parse-msg',lines.length+' stmt(s) · '+addedN+' node(s) · '+addedE+' edge(s)'+(skip?' · '+skip+' dup':'')+(malformed?' · '+malformed+' malformed':'')+(msgs.length?'\n'+msgs.join('\n'):''),true);
   txt.value='';
 }
 
@@ -1537,6 +1626,20 @@ function renderInspectTab(){
   const isDark=theme==='dark';
   const AC={module:isDark?'#60a5fa':'#2563eb',subroutine:isDark?'#a78bfa':'#7c3aed',external:isDark?'#f472b6':'#db2777'};
   const ABG={module:isDark?'rgba(96,165,250,.16)':'rgba(37,99,235,.10)',subroutine:isDark?'rgba(167,139,250,.16)':'rgba(124,58,237,.10)',external:isDark?'rgba(244,114,182,.16)':'rgba(219,39,119,.10)'};
+  const renderRelation = (edge, otherNodeId, direction) => {
+    const other = state.customNodes.find(n => n.id === otherNodeId);
+    if (!other) return '';
+    const color = AC[other.data.nodeType] || AC.module;
+    const bg = ABG[other.data.nodeType] || ABG.module;
+    const edgeLabel = edge.label || (direction === 'out' ? 'link' : 'linked by');
+    return `<div class="relation-item">
+      <span class="relation-node" style="color:${color}" onclick="selectNodeById('${other.id}')">
+        <span class="ndot" style="background:${color}"></span>
+        <span class="relation-node-text">${typeIcon(other.data.nodeType)} ${esc(other.data.title)}</span>
+      </span>
+      <span class="relation-label" style="background:${bg};color:${color}">${esc(edgeLabel)}</span>
+    </div>`;
+  };
 
   let html=``;
 
@@ -1571,11 +1674,11 @@ ${isH?`<div class="hbanner">Hidden from canvas.</div>`:''}
     <div class="detail-stat"><div class="detail-stat-label">Incoming</div><div class="detail-stat-value">${incoming.length}</div></div>
     <div class="detail-stat"><div class="detail-stat-label">Parent</div><div class="detail-stat-value">${node.data.parentName?esc(node.data.parentName):'—'}</div></div>
   </div>
-  ${outgoing.length?`<div class="dblock"><p class="dlbl">Uses →</p><div class="chips">
-    ${outgoing.map(e=>{const t=state.customNodes.find(n=>n.id===e.target);if(!t)return'';const tc=AC[t.data.nodeType]||AC.module;const tbg=ABG[t.data.nodeType]||ABG.module;return`<span class="chip" style="background:${tbg};color:${tc}" onclick="selectNodeById('${t.id}')">${typeIcon(t.data.nodeType)} ${esc(t.data.title)}</span>`;}).join('')}
+  ${outgoing.length?`<div class="dblock"><p class="dlbl">Uses →</p><div class="relation-list">
+    ${outgoing.map(e=>renderRelation(e, e.target, 'out')).join('')}
   </div></div>`:''}
-  ${incoming.length?`<div class="dblock"><p class="dlbl">Used by ←</p><div class="chips">
-    ${incoming.map(e=>{const f=state.customNodes.find(n=>n.id===e.source);if(!f)return'';const fc=AC[f.data.nodeType]||AC.module;const fbg=ABG[f.data.nodeType]||ABG.module;return`<span class="chip" style="background:${fbg};color:${fc}" onclick="selectNodeById('${f.id}')">${typeIcon(f.data.nodeType)} ${esc(f.data.title)}</span>`;}).join('')}
+  ${incoming.length?`<div class="dblock"><p class="dlbl">Used by ←</p><div class="relation-list">
+    ${incoming.map(e=>renderRelation(e, e.source, 'in')).join('')}
   </div></div>`:''}
   <div class="dacts">
     <button class="btn" onclick="selectNodeById('${selectedId}')" ${isH?'disabled':''}>Focus</button>
@@ -1712,6 +1815,8 @@ function showMsg(id,text,ok=false){const el=document.getElementById(id);if(el)el
 // ── Boot ──────────────────────────────────────────────────────────────────────
 sidebarOpen = !isMobileLayout();
 sidebarCollapsed = Boolean(state.focusMode) && !isMobileLayout();
+applySidebarWidth();
+initSidebarResize();
 applyTheme(theme);
 toggleSidebar(false);
 applySidebarCollapsed();
