@@ -7,208 +7,434 @@
 <style>
 /* ── Theme tokens ─────────────────────────────────────────────────────────── */
 [data-theme="dark"]{
-  /* Midnight palette: blue / violet / rose */
-  --bg-body:linear-gradient(145deg,#08111f 0%,#0b1629 54%,#111827 100%);
-  --bg-radial1:rgba(59,130,246,0.18); --bg-radial2:rgba(236,72,153,0.12);
-  --sidebar-bg:linear-gradient(180deg,rgba(12,20,36,0.96),rgba(8,15,28,0.99));
-  --panel-bg:rgba(15,23,42,0.86); --panel-border:rgba(148,163,184,0.20);
-  --line:rgba(148,163,184,0.20);
-  --text:#ffffff; --muted:#cbd5e1;
-  --input-bg:rgba(15,23,42,0.76); --input-border:rgba(148,163,184,0.28);
-  --item-hover:rgba(59,130,246,0.10); --item-sel-bg:rgba(59,130,246,0.17); --item-sel-border:rgba(96,165,250,0.52);
-  --card-bg:rgba(255,255,255,0.055); --notes-bg:rgba(255,255,255,0.04);
-  --block-border:rgba(148,163,184,0.18);
-  --tbtn-bg:rgba(15,23,42,0.86);
-  --legend-bg:rgba(15,23,42,0.88);
-  --cy-bg:transparent; --cy-label:#ffffff; --cy-edge-label:#e2e8f0; --cy-edge-text-bg:#08111f;
-  --cy-node-mod:#12335f; --cy-node-sub:#37246d; --cy-node-ext:#612044;
-  --accent-m:#60a5fa; --accent-s:#a78bfa; --accent-e:#f472b6;
-  --warm:#fb923c; --gold:#facc15; --red:#fb7185; --green:#34d399; --cyan:#60a5fa;
-  --path-color:#f472b6;
-  --cyan-soft:rgba(96,165,250,0.16); --cyan-soft2:rgba(96,165,250,0.11); --cyan-glow:rgba(96,165,250,0.30);
-  --gold-soft:rgba(250,204,21,0.13); --gold-soft2:rgba(250,204,21,0.10); --gold-border:rgba(250,204,21,0.42);
-  --gold-border2:rgba(250,204,21,0.66);
-  --red-soft:rgba(251,113,133,0.14);
-  --green-soft:rgba(52,211,153,0.11);
-  --path-soft:rgba(244,114,182,0.15); --path-soft2:rgba(244,114,182,0.18); --path-border:rgba(244,114,182,0.42); --path-border2:rgba(244,114,182,0.70);
-  --muted-soft:rgba(174,187,208,0.16);
-  --accent-m-soft:rgba(96,165,250,0.20); --accent-s-soft:rgba(167,139,250,0.20); --accent-e-soft:rgba(244,114,182,0.20);
+  --bg-body:linear-gradient(180deg,#071019 0%,#0b1520 52%,#101926 100%);
+  --bg-radial1:rgba(73,122,255,0.14);
+  --bg-radial2:rgba(16,185,129,0.08);
+  --shell-line:rgba(148,163,184,0.18);
+  --panel-bg:rgba(12,19,29,0.94);
+  --panel-bg-soft:rgba(16,24,37,0.84);
+  --panel-border:rgba(148,163,184,0.18);
+  --panel-border-strong:rgba(148,163,184,0.28);
+  --text:#f5f7fb;
+  --muted:#8ea0b8;
+  --muted-strong:#c3cedd;
+  --input-bg:rgba(10,16,25,0.84);
+  --input-border:rgba(148,163,184,0.22);
+  --input-hover:rgba(73,122,255,0.12);
+  --item-hover:rgba(73,122,255,0.10);
+  --item-sel-bg:rgba(73,122,255,0.14);
+  --item-sel-border:rgba(96,165,250,0.48);
+  --surface-raised:rgba(255,255,255,0.035);
+  --surface-muted:rgba(255,255,255,0.028);
+  --surface-emphasis:rgba(73,122,255,0.08);
+  --surface-danger:rgba(251,113,133,0.10);
+  --surface-warning:rgba(245,158,11,0.11);
+  --surface-success:rgba(16,185,129,0.11);
+  --accent:#74a3ff;
+  --accent-strong:#90b5ff;
+  --accent-soft:rgba(116,163,255,0.14);
+  --accent-glow:rgba(116,163,255,0.24);
+  --graph-stroke:rgba(29,41,64,0.5);
+  --cy-bg:transparent; --cy-edge-label:#d8e0ea; --cy-edge-text-bg:#0b1420;
+  --cy-node-mod:#163255; --cy-node-sub:#1c294d; --cy-node-ext:#263047;
+  --accent-m:#79b8ff; --accent-s:#9cb0ff; --accent-e:#9bb0c6;
+  --path-color:#f59e0b;
+  --path-soft:rgba(245,158,11,0.12); --path-soft2:rgba(245,158,11,0.16); --path-border:rgba(245,158,11,0.38); --path-border2:rgba(245,158,11,0.62);
+  --gold:#f59e0b; --red:#fb7185; --green:#10b981; --cyan:#74a3ff; --warm:#fb923c;
+  --gold-soft:rgba(245,158,11,0.12); --gold-soft2:rgba(245,158,11,0.09); --gold-border:rgba(245,158,11,0.34); --gold-border2:rgba(245,158,11,0.52);
+  --red-soft:rgba(251,113,133,0.12);
+  --green-soft:rgba(16,185,129,0.10);
+  --muted-soft:rgba(142,160,184,0.12);
+  --accent-m-soft:rgba(121,184,255,0.16); --accent-s-soft:rgba(156,176,255,0.16); --accent-e-soft:rgba(155,176,198,0.14);
 }
 [data-theme="light"]{
-  /* Light palette: blue / violet / rose */
-  --bg-body:linear-gradient(145deg,#ffffff 0%,#f8fbff 54%,#ffffff 100%);
-  --bg-radial1:rgba(37,99,235,0.045); --bg-radial2:rgba(236,72,153,0.035);
-  --sidebar-bg:linear-gradient(180deg,rgba(255,255,255,0.98),rgba(249,251,255,0.98));
-  --panel-bg:rgba(255,255,255,0.94); --panel-border:rgba(15,23,42,0.11);
-  --line:rgba(15,23,42,0.10);
-  --text:#000000; --muted:#475569;
-  --input-bg:rgba(255,255,255,0.98); --input-border:rgba(148,163,184,0.38);
-  --item-hover:rgba(37,99,235,0.055);
-  --item-sel-bg:rgba(37,99,235,0.10); --item-sel-border:rgba(37,99,235,0.42);
-  --card-bg:rgba(255,255,255,0.86); --notes-bg:rgba(255,255,255,0.72);
-  --block-border:rgba(15,23,42,0.10);
-  --tbtn-bg:rgba(255,255,255,0.92);
-  --legend-bg:rgba(255,255,255,0.94);
-  --cy-bg:transparent; --cy-label:#000000; --cy-edge-label:#334155; --cy-edge-text-bg:#ffffff;
-  --cy-node-mod:#eef6ff; --cy-node-sub:#f4eeff; --cy-node-ext:#fff0f7;
-  --accent-m:#2563eb; --accent-s:#7c3aed; --accent-e:#db2777;
-  --warm:#ea580c; --gold:#ca8a04; --red:#dc2626; --green:#059669; --cyan:#2563eb;
-  --path-color:#db2777;
-  --cyan-soft:rgba(37,99,235,0.10); --cyan-soft2:rgba(37,99,235,0.075); --cyan-glow:rgba(37,99,235,0.18);
-  --gold-soft:rgba(202,138,4,0.10); --gold-soft2:rgba(202,138,4,0.08); --gold-border:rgba(202,138,4,0.32);
-  --gold-border2:rgba(202,138,4,0.52);
+  --bg-body:linear-gradient(180deg,#ffffff 0%,#fbfdff 55%,#ffffff 100%);
+  --bg-radial1:rgba(37,99,235,0.035);
+  --bg-radial2:rgba(16,185,129,0.02);
+  --shell-line:rgba(15,23,42,0.10);
+  --panel-bg:rgba(255,255,255,0.94);
+  --panel-bg-soft:rgba(255,255,255,0.88);
+  --panel-border:rgba(15,23,42,0.10);
+  --panel-border-strong:rgba(15,23,42,0.18);
+  --text:#0f172a;
+  --muted:#66768c;
+  --muted-strong:#334155;
+  --input-bg:rgba(255,255,255,0.98);
+  --input-border:rgba(148,163,184,0.32);
+  --input-hover:rgba(37,99,235,0.08);
+  --item-hover:rgba(37,99,235,0.06);
+  --item-sel-bg:rgba(37,99,235,0.10);
+  --item-sel-border:rgba(37,99,235,0.32);
+  --surface-raised:rgba(255,255,255,0.84);
+  --surface-muted:rgba(248,250,252,0.90);
+  --surface-emphasis:rgba(37,99,235,0.08);
+  --surface-danger:rgba(220,38,38,0.08);
+  --surface-warning:rgba(202,138,4,0.10);
+  --surface-success:rgba(5,150,105,0.08);
+  --accent:#2563eb;
+  --accent-strong:#1d4ed8;
+  --accent-soft:rgba(37,99,235,0.10);
+  --accent-glow:rgba(37,99,235,0.18);
+  --graph-stroke:rgba(219,228,240,0.5);
+  --cy-bg:transparent; --cy-edge-label:#334155; --cy-edge-text-bg:#ffffff;
+  --cy-node-mod:#edf5ff; --cy-node-sub:#f1f4ff; --cy-node-ext:#eef3f8;
+  --accent-m:#2563eb; --accent-s:#4f46e5; --accent-e:#64748b;
+  --path-color:#d97706;
+  --path-soft:rgba(217,119,6,0.10); --path-soft2:rgba(217,119,6,0.13); --path-border:rgba(217,119,6,0.28); --path-border2:rgba(217,119,6,0.48);
+  --gold:#ca8a04; --red:#dc2626; --green:#059669; --cyan:#2563eb; --warm:#ea580c;
+  --gold-soft:rgba(202,138,4,0.10); --gold-soft2:rgba(202,138,4,0.08); --gold-border:rgba(202,138,4,0.24); --gold-border2:rgba(202,138,4,0.40);
   --red-soft:rgba(220,38,38,0.10);
   --green-soft:rgba(5,150,105,0.08);
-  --path-soft:rgba(219,39,119,0.10); --path-soft2:rgba(219,39,119,0.13); --path-border:rgba(219,39,119,0.32); --path-border2:rgba(219,39,119,0.58);
   --muted-soft:rgba(100,116,139,0.12);
-  --accent-m-soft:rgba(37,99,235,0.14); --accent-s-soft:rgba(124,58,237,0.14); --accent-e-soft:rgba(219,39,119,0.14);
+  --accent-m-soft:rgba(37,99,235,0.12); --accent-s-soft:rgba(79,70,229,0.12); --accent-e-soft:rgba(100,116,139,0.12);
 }
 
 /* ── Base ─────────────────────────────────────────────────────────────────── */
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden;
-  background:radial-gradient(circle at top left,var(--bg-radial1),transparent 28%),
-             radial-gradient(circle at top right,var(--bg-radial2),transparent 24%),
+  background:radial-gradient(circle at top left,var(--bg-radial1),transparent 34%),
+             radial-gradient(circle at bottom right,var(--bg-radial2),transparent 30%),
              var(--bg-body);
   color:var(--text);font-family:"IBM Plex Sans","Segoe UI","Apple Color Emoji","Segoe UI Emoji",sans-serif;
 }
-.shell{display:grid;grid-template-columns:minmax(0,1fr) 320px;height:100vh}
-#cy{width:100%;height:100%;background:var(--cy-bg)}
-.sidebar{border-left:1px solid var(--line);background:var(--sidebar-bg);
-  display:flex;flex-direction:column;overflow:hidden;z-index:2;
-  box-shadow:-18px 0 42px rgba(15,23,42,0.10);backdrop-filter:blur(18px)}
-.tabs{display:flex;border-bottom:1px solid var(--line);flex-shrink:0}
-.tab{flex:1;padding:10px 4px;font-size:11px;font-weight:700;letter-spacing:.08em;
-  text-transform:uppercase;cursor:pointer;background:none;border:none;
-  color:var(--muted);border-bottom:2px solid transparent;transition:color 150ms,border-color 150ms}
-.tab.on{color:var(--cyan);border-bottom-color:var(--cyan)}
-.tab:hover:not(.on){color:var(--text)}
-.body{flex:1;overflow-y:auto;padding:14px}
+body.sidebar-open{overflow:hidden}
+.shell{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 360px;height:100vh;transition:grid-template-columns 180ms ease}
+body.sidebar-collapsed .shell{grid-template-columns:minmax(0,1fr) 0}
+.stage{position:relative;overflow:hidden;height:100vh;border-right:1px solid var(--shell-line)}
+#cy{position:absolute;inset:0;width:100%;height:100%;background:
+  linear-gradient(var(--graph-stroke) 1px, transparent 1px),
+  linear-gradient(90deg,var(--graph-stroke) 1px, transparent 1px),
+  var(--cy-bg);
+  background-size:32px 32px,32px 32px,auto;
+  background-position:-1px -1px,-1px -1px,0 0;
+}
+.appbar{position:absolute;top:18px;left:18px;right:auto;display:flex;flex-direction:column;
+  align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid var(--panel-border);background:var(--panel-bg-soft);z-index:6;
+  backdrop-filter:blur(12px);box-shadow:0 18px 40px rgba(2,6,23,0.14);border-radius:16px;
+  width:min(430px,calc(100vw - 336px));
+  max-width:calc(100vw - 336px);
+  animation:barIn 360ms ease}
+.brand-block{display:flex;flex-direction:column;gap:4px;min-width:0}
+.brand-kicker{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.brand-title{font-size:20px;line-height:.98;font-weight:700;letter-spacing:-.04em;overflow-wrap:anywhere}
+.brand-copy{display:none}
+.appbar-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-width:0;font-size:12px;line-height:1.35;color:var(--muted-strong)}
+.appbar-meta strong{font-size:12px;color:var(--text)}
+.meta-sep{opacity:.45}
+.appbar-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;flex-shrink:0;min-width:0}
+.appbar-controls{display:flex;flex-direction:column;gap:10px;width:100%;min-width:0}
+.appbar-control-row{display:flex;flex-wrap:wrap;align-items:flex-start;gap:8px;min-width:0}
+.appbar-control-row.compact .app-btn{padding:8px 10px}
+.appbar-slider{display:flex;align-items:center;gap:10px;min-width:0;flex:1 1 220px;padding:8px 10px;border:1px solid var(--input-border);
+  border-radius:12px;background:var(--surface-raised)}
+.appbar-slider label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.appbar-slider input[type=range]{flex:1;min-width:76px}
+.appbar-slider-value{min-width:38px;text-align:right;font-size:11px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
+.app-btn,.btn,.tab,.lbtn,.tbtn,.hbtn{font-family:inherit}
+.app-btn,.btn,.tab,.lbtn,.tbtn{
+  border:1px solid var(--input-border);background:var(--surface-raised);color:var(--text);
+  border-radius:12px;cursor:pointer;transition:background 140ms,border-color 140ms,color 140ms,opacity 140ms
+}
+.app-btn{padding:7px 10px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.app-btn:hover,.btn:hover,.tab:hover,.lbtn:hover,.tbtn:hover{border-color:var(--accent);background:var(--input-hover)}
+.app-btn.on{border-color:var(--gold-border2);background:var(--gold-soft);color:var(--gold)}
+.app-btn.focus-btn.on{border-color:var(--accent);background:var(--accent-soft);color:var(--text)}
+.app-btn.mobile-only{display:none}
+.control-rail{position:absolute;top:18px;right:18px;display:flex;flex-direction:column;gap:12px;z-index:5;
+  width:min(264px,calc(100vw - 36px))}
+.rail-panel{padding:12px;border-radius:16px;border:1px solid var(--panel-border);background:var(--panel-bg-soft);
+  backdrop-filter:blur(10px);box-shadow:0 18px 34px rgba(2,6,23,0.12)}
+.rail-title{margin-bottom:8px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.toolbar-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.toolbar-grid .lbtn:last-child:nth-child(odd){grid-column:1/-1}
+.lbtn{padding:8px 10px;font-size:11px;font-weight:600;background:transparent}
+.rail-slider{display:flex;align-items:center;gap:8px}
+.rail-stack{display:flex;flex-direction:column;gap:8px}
+.tbtn{padding:10px 12px;text-align:left}
+.tbtn strong{display:block;font-size:11px;margin-bottom:2px}
+.tbtn span{display:block;color:var(--muted);font-size:10px;line-height:1.35}
+.tbtn.on{border-color:var(--gold-border2);background:var(--gold-soft);color:var(--gold)}
+.tbtn.path-on{border-color:var(--path-border2);background:var(--path-soft);color:var(--path-color)}
+.tbtn:disabled{opacity:.45;cursor:not-allowed}
+.sidebar-toggle-inline{display:flex;align-items:center;justify-content:center;align-self:stretch;gap:8px;padding:10px 12px;border:1px solid var(--panel-border-strong);
+  border-radius:14px;background:var(--panel-bg);color:var(--text);backdrop-filter:blur(10px);box-shadow:0 14px 30px rgba(2,6,23,0.18);
+  cursor:pointer;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;position:relative;z-index:1}
+.sidebar-toggle-inline:hover{border-color:var(--accent);background:var(--input-hover)}
+.collapsed-hint{display:none;align-self:stretch;padding:10px 12px;border-radius:14px;border:1px dashed var(--panel-border-strong);background:var(--panel-bg-soft);
+  color:var(--muted-strong);font-size:11px;line-height:1.4}
+body.sidebar-collapsed .collapsed-hint{display:block}
+.graph-key{position:absolute;left:18px;bottom:18px;display:flex;flex-wrap:wrap;gap:8px;max-width:min(680px,calc(100vw - 54px));z-index:5;
+  animation:barIn 420ms ease}
+.key-chip{display:inline-flex;align-items:center;gap:7px;padding:8px 11px;border-radius:999px;border:1px solid var(--panel-border);
+  background:var(--panel-bg-soft);backdrop-filter:blur(10px);font-size:11px;color:var(--muted-strong)}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-/* ── Form ──────────────────────────────────────────────────────────────────── */
-.lbl{margin:12px 0 5px;color:var(--muted);font-size:10px;font-weight:700;
-     letter-spacing:.13em;text-transform:uppercase}
+/* ── Sidebar / inspector ─────────────────────────────────────────────────── */
+.sidebar{background:var(--panel-bg);display:flex;flex-direction:column;overflow:hidden;z-index:7;min-width:0}
+body.sidebar-collapsed .sidebar{border-left:none;opacity:0;pointer-events:none}
+.sidebar-header{padding:18px 18px 14px;border-bottom:1px solid var(--shell-line);display:flex;justify-content:space-between;gap:12px}
+.sidebar-copy{min-width:0}
+.sidebar-kicker{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.sidebar-title{display:none}
+.sidebar-sub{display:none}
+.sidebar-close{display:none}
+.inspector-meta{display:flex;flex-wrap:wrap;gap:7px;padding:12px 18px;border-bottom:1px solid var(--shell-line)}
+.tabs{display:flex;gap:8px;padding:14px 18px 0;flex-shrink:0}
+.tab{flex:1;padding:11px 8px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--muted)}
+.tab.on{background:var(--accent-soft);border-color:rgba(116,163,255,0.28);color:var(--text)}
+.body{flex:1;overflow-y:auto;padding:18px}
+.panel-section{padding:0 0 18px;margin-bottom:18px;border-bottom:1px solid var(--shell-line)}
+.panel-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:4px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.section-title{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.section-copy{display:none}
+.sticky-search{position:sticky;top:0;z-index:2;background:linear-gradient(180deg,var(--panel-bg) 72%,transparent);padding-bottom:12px}
+.summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.summary-cell{padding:10px 11px;border-radius:12px;border:1px solid var(--panel-border);background:var(--surface-muted)}
+.summary-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.summary-value{margin-top:5px;font-size:16px;font-weight:700;letter-spacing:-.02em}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.quick-grid .btn{min-width:0}
+
+/* ── Form ─────────────────────────────────────────────────────────────────── */
+.lbl{margin:12px 0 6px;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
 .lbl:first-child{margin-top:0}
-.row{display:flex;gap:6px;margin-bottom:8px}
-.fi{flex:1;padding:8px 10px;border:1px solid var(--input-border);border-radius:10px;
-  background:var(--input-bg);color:var(--text);font:inherit;font-size:12px;box-shadow:0 1px 0 rgba(15,23,42,0.03)}
-.fi:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px var(--cyan-glow)}
-.fi::placeholder{color:var(--muted);opacity:.6}
+.row{display:flex;gap:8px;margin-bottom:8px}
+.fi{flex:1;padding:10px 11px;border:1px solid var(--input-border);border-radius:12px;background:var(--input-bg);
+  color:var(--text);font:inherit;font-size:12px;line-height:1.35}
+.fi:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.fi::placeholder{color:var(--muted);opacity:.8}
 select.fi{cursor:pointer}
-textarea.fi{resize:vertical;min-height:62px;line-height:1.5}
-.btn{padding:8px 12px;border-radius:10px;border:1px solid var(--input-border);
-  background:var(--item-hover);color:var(--text);font:inherit;font-size:11px;font-weight:600;
-  cursor:pointer;white-space:nowrap;
-  transition:transform 140ms,border-color 140ms,background 140ms}
-.btn:hover{transform:translateY(-1px);border-color:var(--cyan);background:var(--cyan-soft)}
-.btn:active{transform:none}
-.btn-full{width:100%;text-align:left;margin-bottom:6px}
+textarea.fi{resize:vertical;min-height:84px}
+.btn{padding:10px 12px;font-size:11px;font-weight:700;white-space:nowrap}
+.btn-full{width:100%;text-align:left}
 .btn-warn:hover{border-color:var(--gold);background:var(--gold-soft);color:var(--gold)}
+.btn-danger{color:var(--text)}
 .btn-danger:hover{border-color:var(--red);background:var(--red-soft);color:var(--red)}
-.msg{margin-top:7px;padding:7px 10px;border-radius:8px;
-  background:var(--cyan-soft2);color:var(--cyan);
-  font-size:11px;line-height:1.6;white-space:pre-wrap}
+.msg{margin-top:8px;padding:9px 10px;border-radius:12px;background:var(--accent-soft);color:var(--accent-strong);
+  font-size:11px;line-height:1.55;white-space:pre-wrap}
 .msg.ok{background:var(--green-soft);color:var(--green)}
 
 /* ── Nodes list ──────────────────────────────────────────────────────────── */
-.nli{display:flex;align-items:center;gap:7px;padding:6px 9px;border-radius:9px;
-  cursor:pointer;font-size:12px;border:1px solid transparent;margin-bottom:3px;transition:background 120ms}
+.list-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.list-copy{font-size:12px;color:var(--muted-strong)}
+.nlist{display:flex;flex-direction:column;gap:6px}
+.nli{display:flex;align-items:center;gap:8px;padding:10px 10px;border-radius:12px;
+  cursor:pointer;font-size:12px;border:1px solid transparent;transition:background 120ms,border-color 120ms,opacity 120ms}
 .nli:hover{background:var(--item-hover)}
 .nli.sel{background:var(--item-sel-bg);border-color:var(--item-sel-border)}
 .nli.in-path{background:var(--path-soft2);border-color:var(--path-border)}
-.nli.hidden-row{opacity:.5}
+.nli.hidden-row{opacity:.52}
 .ndot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .nname{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
-.ntag{font-size:9px;padding:2px 5px;border-radius:4px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+.ntag{font-size:9px;padding:3px 6px;border-radius:999px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
 .ntag-m{background:var(--accent-m-soft);color:var(--accent-m)}
 .ntag-s{background:var(--accent-s-soft);color:var(--accent-s)}
 .ntag-e{background:var(--accent-e-soft);color:var(--accent-e)}
 .ntag-h{background:var(--muted-soft);color:var(--muted)}
 .ntag-p{background:var(--path-soft);color:var(--path-color)}
-.hbtn{margin-left:2px;flex-shrink:0;background:none;border:none;cursor:pointer;
-  font-size:13px;padding:1px 4px;border-radius:4px;opacity:.4;transition:opacity 120ms}
-.hbtn:hover{opacity:1}
+.hbtn{margin-left:2px;flex-shrink:0;background:none;border:none;color:var(--muted);font-size:13px;padding:2px 4px;border-radius:6px;opacity:.8}
+.hbtn:hover{opacity:1;color:var(--text);background:var(--surface-raised)}
+.empty-state{padding:18px 14px;border:1px dashed var(--panel-border-strong);border-radius:14px;background:var(--surface-muted)}
+.empty-title{font-size:13px;font-weight:700}
+.empty-copy{display:none}
 
-/* ── Detail ──────────────────────────────────────────────────────────────── */
-.dcard{padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card-bg)}
-.dbadge{display:inline-block;margin-bottom:8px;padding:3px 8px;border-radius:999px;
-  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em}
-.dtitle{margin:0 0 7px;font-size:17px;line-height:1.1}
-.dblock{margin-top:10px;padding-top:10px;border-top:1px solid var(--block-border)}
-.dlbl{margin:0 0 6px;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
-.chips{display:flex;flex-wrap:wrap;gap:5px}
-.chip{display:inline-flex;align-items:center;padding:3px 8px;border-radius:999px;
-  font-size:11px;cursor:pointer;transition:opacity 140ms}
-.chip:hover{opacity:.75}
-.dacts{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-.hbanner{margin-bottom:8px;padding:6px 9px;border-radius:8px;
-  background:var(--gold-soft2);color:var(--gold);
-  border:1px solid var(--gold-border);font-size:11px}
-.path-banner{margin-bottom:8px;padding:6px 9px;border-radius:8px;
-  background:var(--path-soft);color:var(--path-color);
-  border:1px solid var(--path-border);font-size:11px}
-
-/* ── Notes ───────────────────────────────────────────────────────────────── */
-.nshell{margin-top:12px;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--notes-bg)}
-.nhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
-.nhead strong{font-size:13px}
-.saved-badge{margin-left:6px;color:var(--warm);font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
-.nhelp{margin-top:6px;color:var(--muted);font-size:11px;line-height:1.45}
-
-/* ── Toolbar overlay ─────────────────────────────────────────────────────── */
-.toolbar{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;gap:6px;z-index:5}
-.tbtn{padding:8px 12px;border-radius:10px;border:1px solid var(--panel-border);
-  background:var(--tbtn-bg);color:var(--text);font:inherit;font-size:11px;cursor:pointer;
-  text-align:left;backdrop-filter:blur(12px);box-shadow:0 12px 34px rgba(15,23,42,0.10);
-  transition:transform 140ms,border-color 140ms,background 140ms}
-.tbtn:hover{transform:translateY(-1px);border-color:var(--cyan);background:var(--cyan-soft)}
-.tbtn.on{border-color:var(--gold-border2);
-  background:var(--gold-soft);color:var(--gold)}
-.tbtn.path-on{border-color:var(--path-border2);
-  background:var(--path-soft);color:var(--path-color)}
-.tbtn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.tbtn strong{display:block;font-size:11px;margin-bottom:1px}
-.tbtn span{color:var(--muted);font-size:10px}
-.layout-group{display:flex;flex-direction:column;gap:4px;
-  padding:10px;border-radius:12px;border:1px solid var(--panel-border);
-  background:var(--tbtn-bg);backdrop-filter:blur(12px);box-shadow:0 12px 34px rgba(15,23,42,0.10)}
-.layout-group-title{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--muted);margin-bottom:2px}
-.layout-row{display:flex;gap:4px}
-.lbtn{flex:1;padding:5px 8px;border-radius:7px;border:1px solid var(--panel-border);
-  background:transparent;color:var(--text);font:inherit;font-size:10px;cursor:pointer;
-  transition:background 130ms,border-color 130ms}
-.lbtn:hover{background:var(--cyan-soft);border-color:var(--cyan)}
-
-/* ── Legend ──────────────────────────────────────────────────────────────── */
-.legend{position:absolute;bottom:14px;left:14px;padding:12px 14px;border-radius:14px;
-  border:1px solid var(--panel-border);background:var(--legend-bg);backdrop-filter:blur(12px);font-size:11px;
-  box-shadow:0 14px 40px rgba(15,23,42,0.12)}
-.leg-row{display:flex;align-items:center;gap:6px;margin-bottom:3px}
-.leg-row:last-child{margin-bottom:0}
-.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+/* ── Detail / inspect ────────────────────────────────────────────────────── */
+.focus-toggle{margin-bottom:12px}
+.status-strip{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.status-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 9px;border-radius:999px;border:1px solid var(--panel-border);background:var(--surface-muted);font-size:11px;color:var(--muted-strong)}
+.path-banner,.hbanner{margin-bottom:12px;padding:10px 11px;border-radius:12px;font-size:11px;line-height:1.45}
+.hbanner{background:var(--gold-soft2);color:var(--gold);border:1px solid var(--gold-border)}
+.path-banner{background:var(--path-soft);color:var(--path-color);border:1px solid var(--path-border)}
+.dcard{padding:14px;border-radius:16px;border:1px solid var(--panel-border-strong);background:var(--surface-emphasis)}
+.dbadge{display:inline-block;margin-bottom:10px;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.11em}
+.dtitle{margin:0 0 10px;font-size:22px;line-height:1.02;letter-spacing:-.04em}
+.detail-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.detail-stat{padding:8px 10px;border-radius:12px;border:1px solid var(--panel-border);background:var(--surface-raised);min-width:92px}
+.detail-stat-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.detail-stat-value{margin-top:4px;font-size:13px;font-weight:700;overflow-wrap:anywhere;word-break:break-word}
+.dblock{margin-top:14px;padding-top:14px;border-top:1px solid var(--shell-line)}
+.dlbl{margin:0 0 7px;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;padding:6px 9px;border-radius:999px;border:1px solid transparent;font-size:11px;cursor:pointer}
+.chip:hover{border-color:currentColor}
+.dtitle{overflow-wrap:anywhere;word-break:break-word}
+.dacts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.nshell{margin-top:14px;padding:14px;border-radius:16px;border:1px solid var(--panel-border);background:var(--surface-muted)}
+.nhead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px}
+.nhead strong{display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:13px;line-height:1.2}
+.nclear{flex-shrink:0;padding:6px 9px;font-size:10px;line-height:1}
+.nfields{display:flex;flex-direction:column;gap:10px}
+.nfield{display:flex;flex-direction:column;gap:6px;min-width:0}
+.nfield .lbl{margin:0}
+.nfield .fi{width:100%}
+.saved-badge{margin-left:6px;color:var(--warm);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.nhelp{margin-top:7px;color:var(--muted);font-size:11px;line-height:1.45}
 
 /* ── Range slider ───────────────────────────────────────────────────────── */
-input[type=range]{-webkit-appearance:none;appearance:none;background:var(--input-border);
-  border-radius:4px;height:4px;outline:none}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;
-  border-radius:50%;background:var(--cyan);cursor:pointer;border:none}
-input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
-  background:var(--cyan);cursor:pointer;border:none}
+input[type=range]{-webkit-appearance:none;appearance:none;background:var(--input-border);border-radius:999px;height:4px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer;border:none}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer;border:none}
 
-/* ── Theme toggle ────────────────────────────────────────────────────────── */
-.theme-btn{position:absolute;bottom:10px;right:10px;padding:6px 11px;border-radius:9px;
-  border:1px solid var(--panel-border);background:var(--tbtn-bg);color:var(--text);
-  font:inherit;font-size:11px;cursor:pointer;backdrop-filter:blur(8px);z-index:5;
-  transition:background 140ms,border-color 140ms}
-.theme-btn:hover{border-color:var(--cyan);background:var(--cyan-soft)}
-
-.stage{position:relative;overflow:hidden;height:100vh}
-@media(max-width:900px){
-  .shell{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;height:auto;min-height:100vh}
-  body{overflow:auto}
-  .stage{min-height:60vh}
-  .sidebar{border-left:none;border-top:1px solid var(--line)}
+/* ── Scrim / responsive ─────────────────────────────────────────────────── */
+.sidebar-scrim{display:none}
+body.focus-on .control-rail,body.focus-on .graph-key{opacity:0;pointer-events:none}
+body.focus-on .appbar{width:auto;padding:8px 10px}
+body.focus-on .brand-block,
+body.focus-on .appbar-meta,
+body.focus-on .appbar-controls,
+body.focus-on #theme-btn,
+body.focus-on #perf-btn,
+body.focus-on .app-btn.mobile-only{display:none}
+body.performance-mode #cy{
+  background:
+    linear-gradient(var(--graph-stroke) 1px, transparent 1px),
+    linear-gradient(90deg,var(--graph-stroke) 1px, transparent 1px),
+    linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.02)),
+    #050505;
+}
+[data-theme="light"] body.performance-mode #cy,
+body.performance-mode[data-theme="light"] #cy{
+  background:
+    linear-gradient(var(--graph-stroke) 1px, transparent 1px),
+    linear-gradient(90deg,var(--graph-stroke) 1px, transparent 1px),
+    linear-gradient(180deg,rgba(0,0,0,0.015),rgba(0,0,0,0.015)),
+    #ffffff;
+}
+body.performance-mode .graph-key .key-chip{
+  background:var(--surface-raised);
+}
+body.performance-mode .appbar,
+body.performance-mode .rail-panel,
+body.performance-mode .sidebar,
+body.performance-mode .collapsed-hint,
+body.performance-mode .summary-cell,
+body.performance-mode .detail-stat,
+body.performance-mode .status-chip,
+body.performance-mode .dcard,
+body.performance-mode .nshell,
+body.performance-mode .empty-state,
+body.performance-mode .key-chip,
+body.performance-mode .meta-chip,
+body.performance-mode .appbar-slider{
+  background:var(--surface-raised);
+  border-color:var(--panel-border-strong);
+  box-shadow:none;
+  backdrop-filter:none;
+}
+body.performance-mode .app-btn,
+body.performance-mode .btn,
+body.performance-mode .tab,
+body.performance-mode .lbtn,
+body.performance-mode .tbtn,
+body.performance-mode .fi{
+  background:var(--surface-raised);
+  border-color:var(--panel-border-strong);
+  box-shadow:none;
+}
+body.performance-mode .app-btn.on,
+body.performance-mode .app-btn.focus-btn.on,
+body.performance-mode .tbtn.on,
+body.performance-mode .tbtn.path-on,
+body.performance-mode .tab.on{
+  background:var(--surface-muted);
+  border-color:var(--text);
+  color:var(--text);
+}
+body.performance-mode .dbadge,
+body.performance-mode .chip,
+body.performance-mode .ntag,
+body.performance-mode .path-banner,
+body.performance-mode .hbanner,
+body.performance-mode .msg{
+  background:var(--surface-muted) !important;
+  border-color:var(--panel-border-strong) !important;
+  color:var(--text) !important;
+}
+body.performance-mode .leg-dot,
+body.performance-mode .ndot{
+  background:var(--text) !important;
+}
+[data-theme="dark"] body.performance-mode,
+body.performance-mode[data-theme="dark"]{
+  --panel-bg:#050505;
+  --panel-bg-soft:#0a0a0a;
+  --panel-border:rgba(255,255,255,0.16);
+  --panel-border-strong:rgba(255,255,255,0.32);
+  --input-bg:#050505;
+  --input-border:rgba(255,255,255,0.22);
+  --input-hover:rgba(255,255,255,0.08);
+  --surface-raised:#0a0a0a;
+  --surface-muted:#121212;
+  --surface-emphasis:#101010;
+  --shell-line:rgba(255,255,255,0.12);
+  --accent:#ffffff;
+  --accent-strong:#ffffff;
+  --accent-soft:rgba(255,255,255,0.08);
+  --accent-glow:rgba(255,255,255,0.14);
+  --gold:#ffffff;
+  --red:#ffffff;
+  --green:#ffffff;
+  --cyan:#ffffff;
+  --warm:#ffffff;
+}
+[data-theme="light"] body.performance-mode,
+body.performance-mode[data-theme="light"]{
+  --panel-bg:#ffffff;
+  --panel-bg-soft:#ffffff;
+  --panel-border:rgba(0,0,0,0.12);
+  --panel-border-strong:rgba(0,0,0,0.24);
+  --input-bg:#ffffff;
+  --input-border:rgba(0,0,0,0.18);
+  --input-hover:rgba(0,0,0,0.04);
+  --surface-raised:#ffffff;
+  --surface-muted:#f7f7f7;
+  --surface-emphasis:#f3f3f3;
+  --shell-line:rgba(0,0,0,0.10);
+  --accent:#000000;
+  --accent-strong:#000000;
+  --accent-soft:rgba(0,0,0,0.06);
+  --accent-glow:rgba(0,0,0,0.10);
+  --gold:#000000;
+  --red:#000000;
+  --green:#000000;
+  --cyan:#000000;
+  --warm:#000000;
+}
+@keyframes barIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:1200px){
+  .shell{grid-template-columns:minmax(0,1fr) 332px}
+  .appbar{max-width:calc(100vw - 318px)}
+}
+@media(max-width:980px){
+  html,body{overflow:auto}
+  .shell{display:block;height:auto;min-height:100vh}
+  .stage{height:100vh;border-right:none}
+  .appbar{top:12px;left:12px;right:12px;width:auto;max-width:none;padding:10px 12px}
+  .brand-title{font-size:18px}
+  .appbar-meta{max-width:none;font-size:11px}
+  .appbar-slider{flex:1 1 100%}
+  .app-btn.mobile-only{display:inline-flex}
+  .sidebar-toggle-inline,.collapsed-hint{display:none !important}
+  .control-rail{top:auto;bottom:82px;left:12px;right:12px;width:auto}
+  .rail-panel{padding:10px}
+  .graph-key{left:12px;right:12px;bottom:16px;max-width:none}
+  .sidebar-scrim{display:block;position:fixed;inset:0;background:rgba(2,6,23,0.48);opacity:0;pointer-events:none;transition:opacity 160ms;z-index:8}
+  body.sidebar-open .sidebar-scrim{opacity:1;pointer-events:auto}
+  .sidebar{position:fixed;left:0;right:0;bottom:0;height:min(78vh,760px);border-top-left-radius:22px;border-top-right-radius:22px;
+    border:1px solid var(--panel-border-strong);border-bottom:none;transform:translateY(calc(100% + 12px));transition:transform 220ms ease;z-index:9}
+  body.sidebar-open .sidebar{transform:translateY(0)}
+  .sidebar-close{display:inline-flex}
+  .body{padding:16px}
+}
+@media(max-width:680px){
+  .appbar{gap:10px}
+  .appbar-actions{width:100%;justify-content:flex-start}
+  .appbar-control-row{width:100%}
+  .appbar-meta{max-width:none}
+  .toolbar-grid{grid-template-columns:1fr 1fr}
+  .summary-grid,.quick-grid{grid-template-columns:1fr}
+  .row{flex-direction:column}
 }
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -221,17 +447,32 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
 <body>
 <div class="shell">
   <div class="stage">
+    <header class="appbar" id="appbar">
+      <div class="brand-block">
+        <h1 class="brand-title">FortGraph</h1>
+      </div>
+      <div class="appbar-meta" id="appbar-meta"></div>
+      <div class="appbar-actions">
+        <button class="app-btn mobile-only" type="button" onclick="toggleSidebar(true)">Inspect</button>
+        <button class="app-btn" type="button" onclick="toggleTheme()" id="theme-btn">☀ Light</button>
+        <button class="app-btn" type="button" onclick="togglePerformanceMode()" id="perf-btn">Performance</button>
+        <button class="app-btn focus-btn" type="button" onclick="toggleFocusMode()" id="focus-btn">Focus</button>
+      </div>
+      <div class="appbar-controls" id="appbar-controls"></div>
+    </header>
     <div id="cy"></div>
-    <div class="toolbar" id="toolbar"></div>
-    <div class="legend" id="legend">
-      <div class="leg-row"><span class="leg-dot" style="background:var(--accent-m)"></span>🧩 Module</div>
-      <div class="leg-row"><span class="leg-dot" style="background:var(--accent-s)"></span>⚙️ Subroutine</div>
-      <div class="leg-row"><span class="leg-dot" style="background:var(--accent-e)"></span>📦 External</div>
-      <div class="leg-row"><span class="leg-dot" style="background:var(--path-color)"></span>Path selection</div>
-    </div>
-    <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">☀ Light</button>
+    <div class="control-rail" id="toolbar"></div>
+    <div class="graph-key" id="legend"></div>
   </div>
-  <aside class="sidebar">
+  <button class="sidebar-scrim" id="sidebar-scrim" type="button" aria-label="Close inspector" onclick="toggleSidebar(false)"></button>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-copy">
+        <h2 class="sidebar-title"></h2>
+      </div>
+      <button class="app-btn sidebar-close" type="button" onclick="toggleSidebar(false)">Close</button>
+    </div>
+    <div class="inspector-meta" id="sidebar-meta"></div>
     <div class="tabs" id="tabs"></div>
     <div class="body" id="panel"></div>
   </aside>
@@ -253,7 +494,6 @@ function applyTheme(t) {
     cy.style(buildCyStyle());
     syncGraph();
     renderSidebar();
-    renderToolbar();
   }
 }
 function toggleTheme() { applyTheme(theme === 'dark' ? 'light' : 'dark'); }
@@ -276,11 +516,12 @@ function loadState() {
       global:        p.global   || '',
       focusMode:     Boolean(p.focusMode),
       textScale:     typeof p.textScale==='number' ? p.textScale : 1.0,
+      performanceMode: Boolean(p.performanceMode),
     };
   } catch { return fresh(); }
 }
 function fresh() {
-  return { customNodes:[], customEdges:[], nodePositions:{}, hiddenNodeIds:[], perNode:{}, global:'', focusMode:false, textScale:1.0 };
+  return { customNodes:[], customEdges:[], nodePositions:{}, hiddenNodeIds:[], perNode:{}, global:'', focusMode:false, textScale:1.0, performanceMode:false };
 }
 function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 function snapState() {
@@ -289,6 +530,7 @@ function snapState() {
 }
 
 let state = loadState();
+let performanceReminderShown = false;
 
 function applyState(next, record=true) {
   if (record) {
@@ -379,6 +621,10 @@ const cy = cytoscape({
   layout: { name: 'preset' },
   wheelSensitivity: 0.3,
   minZoom: 0.06, maxZoom: 3,
+  hideEdgesOnViewport: true,
+  textureOnViewport: true,
+  motionBlur: true,
+  pixelRatio: 1,
 });
 
 function getThemeVar(v) {
@@ -387,21 +633,28 @@ function getThemeVar(v) {
 
 function buildCyStyle() {
   const isDark = theme === 'dark';
+  const perf = Boolean(state.performanceMode);
+  const ts = state.textScale || 1.0;
+  const edgeFontSize = Math.max(8, Math.round(10 * ts));
   const edgeLabel   = isDark ? '#ffffff' : '#000000';
   const edgeLblBg   = isDark ? '#08111f' : '#ffffff';
-  const pathColor   = isDark ? '#f472b6' : '#db2777';
+  const pathColor   = perf ? (isDark ? '#ffffff' : '#000000') : (isDark ? '#f472b6' : '#db2777');
+  const perfBg      = isDark ? '#050505' : '#ffffff';
+  const perfBorder  = isDark ? '#ffffff' : '#000000';
+  const perfSoft    = isDark ? '#d4d4d4' : '#202020';
+  const perfDim     = isDark ? 0.22 : 0.16;
   return [
     { selector:'node', style:{
       shape:'roundrectangle',
-      'background-color':'data(bgColor)',
-      'border-color':'data(accentColor)',
+      'background-color': perf ? perfBg : 'data(bgColor)',
+      'border-color': perf ? perfBorder : 'data(accentColor)',
       'border-width':1, 'border-opacity':0.24,
       label:'data(label)',
       'text-valign':'center','text-halign':'center',
       'text-wrap':'wrap','text-overflow-wrap':'anywhere','text-max-width':'data(textW)',
       'text-justification':'center',
       'line-height':1.18,
-      'background-image':'data(iconImage)',
+      'background-image': perf ? 'none' : 'data(iconImage)',
       'background-fit':'none',
       'background-width':'24px','background-height':'24px',
       'background-position-x':'12px','background-position-y':'12px',
@@ -411,29 +664,30 @@ function buildCyStyle() {
       color:'data(labelColor)',
       'text-outline-width':0,
       width:'data(w)',height:'data(h)',padding:12,
-      'shadow-blur':18,
+      'shadow-blur': perf ? 0 : 18,
       'shadow-color':isDark ? '#000000' : '#64748b',
-      'shadow-opacity':isDark ? 0.34 : 0.18,
+      'shadow-opacity':perf ? 0 : (isDark ? 0.34 : 0.18),
       'shadow-offset-x':0,'shadow-offset-y':6,
-      'transition-property':'border-color,border-width,border-opacity,shadow-blur,shadow-opacity,opacity',
+      'transition-property':'border-color,border-width,border-opacity,opacity',
       'transition-duration':190,
     }},
-    // Layered three-stop gradients create a softer, dimensional surface.
-    { selector:'node[nodeType="module"]', style:{
+    { selector:'node[nodeType="module"]', style: perf ? {} : {
       'background-fill':'linear-gradient',
       'background-gradient-direction':'to-bottom-right',
       'background-gradient-stop-colors': isDark ? '#244b86 #173563 #102847' : '#ffffff #edf5ff #d9e9ff',
       'background-gradient-stop-positions':'0% 52% 100%',
       'border-color':isDark ? '#79b8ff' : '#4f8fe8',
     }},
-    { selector:'node[nodeType="subroutine"]', style:{
+    { selector:'node[nodeType="subroutine"]', style: perf ? {} : {
       'background-fill':'linear-gradient',
       'background-gradient-direction':'to-bottom-right',
       'background-gradient-stop-colors': isDark ? '#60478f #3f2e6e #2d2254' : '#ffffff #f5efff #e8dcff',
       'background-gradient-stop-positions':'0% 52% 100%',
       'border-color':isDark ? '#bda2ff' : '#8b63d9',
     }},
-    { selector:'node[nodeType="external"]', style:{
+    { selector:'node[nodeType="external"]', style: perf ? {
+      'border-style':'solid',
+    } : {
       'background-fill':'linear-gradient',
       'background-gradient-direction':'to-bottom-right',
       'background-gradient-stop-colors': isDark ? '#8f3f68 #632b4b #461f38' : '#ffffff #fff0f7 #ffdce9',
@@ -442,45 +696,46 @@ function buildCyStyle() {
       'border-style':'solid',
     }},
     { selector:'node.sel', style:{
-      'border-color':'data(accentColor)','border-width':2.5,'border-opacity':0.95,
-      'shadow-blur':34,'shadow-color':'data(accentColor)','shadow-opacity':0.52,
+      'border-color': perf ? perfBorder : 'data(accentColor)','border-width':2.5,'border-opacity':0.95,
+      'shadow-blur': perf ? 0 : 34,'shadow-color':'data(accentColor)','shadow-opacity':perf ? 0 : 0.52,
       'shadow-offset-x':0,'shadow-offset-y':5,'z-index':20,
     }},
     { selector:'node.nbr', style:{
-      'border-color':'data(accentColor)','border-width':1.6,'border-opacity':0.62,
-      'shadow-blur':22,'shadow-color':'data(accentColor)','shadow-opacity':0.28,
+      'border-color': perf ? perfSoft : 'data(accentColor)','border-width':1.6,'border-opacity':0.62,
+      'shadow-blur': perf ? 0 : 22,'shadow-color':'data(accentColor)','shadow-opacity':perf ? 0 : 0.28,
       'shadow-offset-x':0,'shadow-offset-y':5,'z-index':10,
     }},
     { selector:'node.in-path', style:{
       'border-color':pathColor,'border-width':2.5,'border-opacity':0.95,
-      'shadow-blur':30,'shadow-color':pathColor,'shadow-opacity':0.48,
+      'shadow-blur': perf ? 0 : 30,'shadow-color':pathColor,'shadow-opacity':perf ? 0 : 0.48,
       'shadow-offset-x':0,'shadow-offset-y':5,'z-index':18,
     }},
-    { selector:'node.dim', style:{ opacity:0.15 }},
+    { selector:'node.dim', style:{ opacity: perf ? perfDim : 0.15 }},
     { selector:'edge', style:{
       'curve-style':'bezier',
       'target-arrow-shape':'triangle',
-      'target-arrow-color':'data(edgeColor)',
-      'line-color':'data(edgeColor)',
+      'target-arrow-color': perf ? perfBorder : 'data(edgeColor)',
+      'line-color': perf ? perfBorder : 'data(edgeColor)',
+      'line-style':'dashed',
+      'line-dash-pattern':[7,4],
       'line-opacity':0.74,
       'target-arrow-fill':'filled','arrow-scale':1.1,
-      width:2.1, label:'data(label)',
-      'font-size':10,'font-family':'"IBM Plex Mono",monospace',
+      width: perf ? 1.5 : 2.1, label: perf ? '' : 'data(label)',
+      'font-size':edgeFontSize,'font-family':'"IBM Plex Mono",monospace',
       color: edgeLabel,
       'text-background-color':edgeLblBg,
-      'text-background-opacity':0.85,
+      'text-background-opacity':perf ? 0 : 0.85,
       'text-background-padding':2,
       'text-background-shape':'roundrectangle',
       'transition-property':'opacity,width,line-opacity',
       'transition-duration':160,
     }},
-    { selector:'edge[isDashed="1"]', style:{'line-style':'dashed','line-dash-pattern':[7,4]}},
-    { selector:'edge.sel-edge', style:{'line-opacity':1,width:3,'z-index':15}},
+    { selector:'edge.sel-edge', style:{'line-opacity':1,width:perf ? 2.2 : 3,'z-index':15}},
     { selector:'edge.path-edge', style:{
       'line-color':pathColor,'target-arrow-color':pathColor,
-      'line-opacity':1,width:3,'z-index':16,
+      'line-opacity':1,width:perf ? 2.2 : 3,'z-index':16,
     }},
-    { selector:'edge.dim', style:{ opacity:0.08 }},
+    { selector:'edge.dim', style:{ opacity: perf ? 0.04 : 0.08 }},
   ];
 }
 
@@ -604,17 +859,17 @@ function syncGraph() {
   state.customEdges.forEach(e => {
     if (hidden.has(e.source)||hidden.has(e.target)) { const el=cy.getElementById(e.id); if(el.length) el.remove(); return; }
     wantEdges.add(e.id);
-    const isDashed = e.data?.isDashed ? '1' : '0';
-    let ec = e.data?.isDashed ? (isDark?'#f472b6':'#db2777') : (isDark?'#60a5fa':'#2563eb');
+    let ec = isDark?'#60a5fa':'#2563eb';
     if (e.style?.stroke) {
       const s=e.style.stroke;
       if (s.includes('149,224,141')||s==='#a78bfa') ec=isDark?'#a78bfa':'#7c3aed';
+      else if (s.includes('244,114,182')||s==='#f472b6'||s==='#db2777') ec=isDark?'#f472b6':'#db2777';
     }
     const el = cy.getElementById(e.id);
     if (!el.length) {
       cy.add({ group:'edges', data:{ id:e.id, source:e.source, target:e.target,
-        label:e.label||'', isDashed, edgeColor:ec } });
-    } else { el.data({ label:e.label||'', isDashed, edgeColor:ec }); }
+        label:e.label||'', edgeColor:ec } });
+    } else { el.data({ label:e.label||'', edgeColor:ec }); }
   });
 
   cy.edges().forEach(el => { if(!wantEdges.has(el.id())) el.remove(); });
@@ -653,6 +908,7 @@ cy.on('dragfree','node',e=>{
   state.nodePositions={...state.nodePositions,[e.target.id()]:{x:pos.x,y:pos.y}};
   saveState();
 });
+cy.on('zoom',()=>syncZoomUi());
 
 cy.on('tap','node',e=>{
   const id=e.target.id();
@@ -711,67 +967,182 @@ function ensureSubroutine(nodes,edges,title,msgs){
 function ensureEdge(edges,source,target,label,isDashed,colorHint){
   if(edges.find(e=>e.source===source&&e.target===target&&(e.label||'')===(label||''))) return false;
   edges.push({id:'e-'+Date.now()+'-'+Math.random().toString(36).slice(2,5),
-    source,target,label:label||'',data:{isDashed:!!isDashed},
-    style:{stroke:colorHint||(isDashed?'#f2b766':'#a3b8d6')}});
+    source,target,label:label||'',data:{isDashed:true},
+    style:{stroke:colorHint||'#a3b8d6'}});
   return true;
 }
 
 // ── Sidebar ───────────────────────────────────────────────────────────────────
-let activeTab='add', nodeQuery='';
-function setTab(t){activeTab=t;renderSidebar();}
-const TABS=[['add','+ Add'],['nodes','Nodes'],['detail','Detail']];
+let activeTab='build', nodeQuery='', sidebarOpen=false, sidebarCollapsed=false;
+function isMobileLayout(){ return window.matchMedia('(max-width: 980px)').matches; }
+function toggleSidebar(force){
+  sidebarOpen = typeof force === 'boolean' ? force : !sidebarOpen;
+  document.body.classList.toggle('sidebar-open', sidebarOpen && isMobileLayout());
+}
+function applySidebarCollapsed() {
+  document.body.classList.toggle('sidebar-collapsed', sidebarCollapsed && !isMobileLayout());
+  const toggle = document.getElementById('sidebar-toggle');
+  if (toggle) {
+    toggle.textContent = sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar';
+    toggle.setAttribute('aria-label', sidebarCollapsed ? 'Expand inspector' : 'Collapse inspector');
+  }
+}
+function toggleSidebarCollapsed(force) {
+  sidebarCollapsed = typeof force === 'boolean' ? force : !sidebarCollapsed;
+  applySidebarCollapsed();
+}
+function setTab(t){
+  activeTab=t;
+  renderSidebar();
+  if (isMobileLayout()) toggleSidebar(true);
+}
+window.addEventListener('resize', ()=>{
+  document.body.classList.toggle('sidebar-open', sidebarOpen && isMobileLayout());
+  applySidebarCollapsed();
+});
+
+const TABS=[['build','Build'],['browse','Browse'],['inspect','Inspect']];
+
+function graphStats(){
+  const total = state.customNodes.length;
+  const hidden = state.hiddenNodeIds.length;
+  const visible = Math.max(0, total - hidden);
+  const modules = state.customNodes.filter(n=>n.data.nodeType==='module').length;
+  const subs = state.customNodes.filter(n=>n.data.nodeType==='subroutine').length;
+  const external = state.customNodes.filter(n=>n.data.nodeType==='external').length;
+  return { total, hidden, visible, modules, subs, external, edges: state.customEdges.length, path: pathSet.size };
+}
+
+function maybePromptPerformanceMode() {
+  if (performanceReminderShown || state.performanceMode || state.customNodes.length < 50) return;
+  performanceReminderShown = true;
+  setTimeout(() => {
+    if (confirm('Large graph detected (50+ nodes). Enable Performance mode for a simpler, faster graph view?')) {
+      togglePerformanceMode();
+    }
+  }, 0);
+}
+
+function renderAppChrome(){
+  const stats = graphStats();
+  const appMeta = document.getElementById('appbar-meta');
+  const appControls = document.getElementById('appbar-controls');
+  const sideMeta = document.getElementById('sidebar-meta');
+  const legend = document.getElementById('legend');
+  const perfBtn = document.getElementById('perf-btn');
+  const focusBtn = document.getElementById('focus-btn');
+  const zoomLevel = cy ? cy.zoom() : 1;
+  document.body.classList.toggle('focus-on', state.focusMode);
+  document.body.classList.toggle('performance-mode', Boolean(state.performanceMode));
+  if (perfBtn) {
+    perfBtn.classList.toggle('on', Boolean(state.performanceMode));
+    perfBtn.textContent = state.performanceMode ? 'Performance on' : 'Performance';
+  }
+  if (focusBtn) {
+    focusBtn.classList.toggle('on', Boolean(state.focusMode));
+    focusBtn.textContent = state.focusMode ? 'Exit focus' : 'Focus mode';
+  }
+  appMeta.innerHTML = `
+    <strong>${stats.total}</strong> nodes <span class="meta-sep">|</span>
+    <strong>${stats.visible}</strong> visible <span class="meta-sep">|</span>
+    <strong>${stats.hidden}</strong> hidden <span class="meta-sep">|</span>
+    <strong>${stats.edges}</strong> edges${pathMode?` <span class="meta-sep">|</span> <strong>${stats.path}</strong> in path`:''}`;
+  if (appControls) {
+    appControls.innerHTML = `
+      <div class="appbar-control-row compact">
+        <button class="app-btn${pathMode ? ' on' : ''}" type="button" onclick="togglePathMode()">${pathMode ? `Path ${pathSet.size}` : 'Path mode'}</button>
+        <button class="app-btn" type="button" onclick="undo()" ${!undoStack.length ? 'disabled' : ''}>Undo</button>
+        <button class="app-btn" type="button" onclick="redo()" ${!redoStack.length ? 'disabled' : ''}>Redo</button>
+      </div>
+      <div class="appbar-control-row">
+        <div class="appbar-slider">
+          <label for="text-scale-slider">Labels</label>
+          <input id="text-scale-slider" type="range" min="0.7" max="2.2" step="0.1" value="${(state.textScale || 1.0).toFixed(1)}" oninput="setTextScale(parseFloat(this.value))"/>
+          <span class="appbar-slider-value" id="text-scale-value">${(state.textScale || 1.0).toFixed(1)}×</span>
+        </div>
+      </div>
+      <div class="appbar-control-row">
+        <div class="appbar-slider">
+          <label for="zoom-slider">Zoom</label>
+          <input id="zoom-slider" type="range" min="0.3" max="2.5" step="0.05" value="${zoomLevel.toFixed(2)}" oninput="setZoomLevel(parseFloat(this.value))"/>
+          <span class="appbar-slider-value" id="zoom-value">${zoomLevel.toFixed(2)}×</span>
+        </div>
+      </div>`;
+  }
+  sideMeta.innerHTML = `
+    <div class="meta-chip"><strong>${stats.modules}</strong> modules</div>
+    <div class="meta-chip"><strong>${stats.subs}</strong> subs</div>
+    <div class="meta-chip"><strong>${stats.external}</strong> external</div>
+    <div class="meta-chip"><strong>${selectedId?'1':'0'}</strong> selected</div>`;
+  legend.innerHTML = `
+    <div class="key-chip"><span class="leg-dot" style="background:var(--accent-m)"></span>🧩 Module</div>
+    <div class="key-chip"><span class="leg-dot" style="background:var(--accent-s)"></span>⚙️ Subroutine</div>
+    <div class="key-chip"><span class="leg-dot" style="background:var(--accent-e)"></span>📦 External</div>
+    <div class="key-chip"><span class="leg-dot" style="background:var(--path-color)"></span>Path selection</div>`;
+}
 
 function renderSidebar(){
+  renderAppChrome();
   document.getElementById('tabs').innerHTML=TABS.map(([id,label])=>
     `<button class="tab${activeTab===id?' on':''}" onclick="setTab('${id}')">${label}</button>`).join('');
   const panel=document.getElementById('panel');
-  if(activeTab==='add')    panel.innerHTML=renderAddTab();
-  if(activeTab==='nodes')  panel.innerHTML=renderNodesTab();
-  if(activeTab==='detail') panel.innerHTML=renderDetailTab();
+  if(activeTab==='build') panel.innerHTML=renderBuildTab();
+  if(activeTab==='browse') panel.innerHTML=renderBrowseTab();
+  if(activeTab==='inspect') panel.innerHTML=renderInspectTab();
   renderToolbar();
+  maybePromptPerformanceMode();
 }
 
-// ── Add tab ───────────────────────────────────────────────────────────────────
-function renderAddTab(){
+// ── Build tab ────────────────────────────────────────────────────────────────
+function renderBuildTab(){
   const mods=state.customNodes.filter(n=>n.data.nodeType==='module');
   const nonExt=state.customNodes.filter(n=>n.data.nodeType!=='external');
   return `
-<p class="lbl">Module</p>
-<div class="row">
-  <input class="fi" id="mod-inp" placeholder="e.g. physics_mod" onkeydown="if(event.key==='Enter')addModule()"/>
-  <button class="btn" onclick="addModule()">Add</button>
-</div>
-<p class="lbl">Subroutine</p>
-<div class="row"><input class="fi" id="sub-inp" placeholder="e.g. compute_flux" onkeydown="if(event.key==='Enter')addSubroutine()"/></div>
-<div class="row">
-  <select class="fi" id="sub-par">
-    <option value="">— parent module (optional) —</option>
-    ${mods.map(n=>`<option value="${n.id}">${esc(n.data.title)}</option>`).join('')}
-  </select>
-</div>
-<div class="row"><button class="btn" style="flex:1" onclick="addSubroutine()">Add subroutine</button></div>
-<p class="lbl">Parse USE Statements</p>
-<textarea class="fi" id="use-txt" placeholder="USE physics_mod, ONLY: density&#10;USE io_mod&#10;USE constants_mod, ONLY: pi, hbar"></textarea>
-<div class="row" style="margin-top:6px">
-  <select class="fi" id="use-src">
-    <option value="">— attach to node —</option>
-    ${nonExt.map(n=>`<option value="${n.id}">${typeIcon(n.data.nodeType)} ${esc(n.data.title)}</option>`).join('')}
-  </select>
-  <button class="btn" onclick="parseUse()">Parse</button>
-</div>
-<div id="parse-msg"></div>
-<p class="lbl">Import / Export</p>
-<div class="row">
-  <button class="btn" style="flex:1" onclick="document.getElementById('json-import').click()">⇧ Import JSON</button>
-  <input id="json-import" type="file" accept="application/json,.json" hidden onchange="importJSONFile(this.files[0]);this.value=''"/>
-</div>
-<div class="row">
-  <button class="btn btn-warn" style="flex:1" onclick="exportJSON()">⇩ Export JSON</button>
-  <button class="btn btn-warn" style="flex:1" onclick="exportDOT()">⇩ Export DOT</button>
-</div>
-<div id="export-msg"></div>
-<p class="lbl">Danger Zone</p>
-<button class="btn btn-danger btn-full" onclick="clearAllCache()">Clear all cached data</button>`;
+<section class="panel-section">
+  <div class="section-head"><div class="section-title">Create nodes</div></div>
+  <p class="lbl">Module</p>
+  <div class="row">
+    <input class="fi" id="mod-inp" placeholder="e.g. physics_mod" onkeydown="if(event.key==='Enter')addModule()"/>
+    <button class="btn" onclick="addModule()">Add</button>
+  </div>
+  <p class="lbl">Subroutine</p>
+  <div class="row"><input class="fi" id="sub-inp" placeholder="e.g. compute_flux" onkeydown="if(event.key==='Enter')addSubroutine()"/></div>
+  <div class="row">
+    <select class="fi" id="sub-par">
+      <option value="">— parent module (optional) —</option>
+      ${mods.map(n=>`<option value="${n.id}">${esc(n.data.title)}</option>`).join('')}
+    </select>
+  </div>
+  <div class="row"><button class="btn" style="flex:1" onclick="addSubroutine()">Add subroutine</button></div>
+</section>
+<section class="panel-section">
+  <div class="section-head"><div class="section-title">Parse imports</div></div>
+  <textarea class="fi" id="use-txt" placeholder="USE physics_mod, ONLY: density&#10;USE io_mod&#10;USE constants_mod, ONLY: pi, hbar"></textarea>
+  <div class="row" style="margin-top:8px">
+    <select class="fi" id="use-src">
+      <option value="">— attach to node —</option>
+      ${nonExt.map(n=>`<option value="${n.id}">${typeIcon(n.data.nodeType)} ${esc(n.data.title)}</option>`).join('')}
+    </select>
+    <button class="btn" onclick="parseUse()">Parse</button>
+  </div>
+  <div id="parse-msg"></div>
+</section>
+<section class="panel-section">
+  <div class="section-head"><div class="section-title">Import / export</div></div>
+  <div class="row">
+    <button class="btn" style="flex:1" onclick="document.getElementById('json-import').click()">⇧ Import JSON</button>
+    <input id="json-import" type="file" accept="application/json,.json" hidden onchange="importJSONFile(this.files[0]);this.value=''"/>
+  </div>
+  <div class="row">
+    <button class="btn btn-warn" style="flex:1" onclick="exportJSON()">⇩ Export JSON</button>
+    <button class="btn btn-warn" style="flex:1" onclick="exportDOT()">⇩ Export DOT</button>
+  </div>
+  <div id="export-msg"></div>
+</section>
+<section class="panel-section">
+  <div class="section-head"><div class="section-title">Danger zone</div></div>
+  <button class="btn btn-danger btn-full" onclick="clearAllCache()">Clear all cached data</button>
+</section>`;
 }
 
 function addModule(){
@@ -1018,22 +1389,31 @@ function exportDOT(){
 }
 function dl(content,filename,mime){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:mime}));a.download=filename;a.click();URL.revokeObjectURL(a.href);}
 
-// ── Nodes tab ─────────────────────────────────────────────────────────────────
-function renderNodesTab(){
+// ── Browse tab ───────────────────────────────────────────────────────────────
+function renderBrowseTab(){
+  const stats=graphStats();
   const hidden=new Set(state.hiddenNodeIds);
   const filtered=state.customNodes.filter(n=>n.data.title.toLowerCase().includes(nodeQuery.toLowerCase()));
   const isDark=theme==='dark';
   const AC={module:isDark?'#60a5fa':'#2563eb',subroutine:isDark?'#a78bfa':'#7c3aed',external:isDark?'#f472b6':'#db2777'};
   return `
-<div class="row" style="margin-bottom:8px">
-  <input class="fi" placeholder="Search nodes…" value="${esc(nodeQuery)}" oninput="nodeQuery=this.value;renderSidebar()"/>
-</div>
-${hidden.size?`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-  <span style="font-size:11px;color:var(--muted)">${hidden.size} hidden</span>
-  <button class="btn" style="font-size:10px;padding:3px 9px" onclick="showAllNodes()">Show all</button>
-</div>`:''}
-${!filtered.length?`<p style="color:var(--muted);font-size:12px;margin-top:6px">${nodeQuery?'No matches.':'No nodes yet.'}</p>`
-  :filtered.map(n=>{
+<section class="panel-section sticky-search">
+  <div class="section-head"><div class="section-title">Browse graph</div></div>
+  <div class="row" style="margin-bottom:0">
+    <input class="fi" placeholder="Search nodes…" value="${esc(nodeQuery)}" oninput="nodeQuery=this.value;renderSidebar()"/>
+  </div>
+</section>
+<section class="panel-section">
+  <div class="summary-grid">
+    <div class="summary-cell"><div class="summary-label">Visible</div><div class="summary-value">${stats.visible}</div></div>
+    <div class="summary-cell"><div class="summary-label">Hidden</div><div class="summary-value">${stats.hidden}</div></div>
+  </div>
+  <div class="list-head">
+    <div class="list-copy">${nodeQuery?`${filtered.length} matching node(s)`:`${stats.total} node(s) in the workspace`}</div>
+    ${hidden.size?`<button class="btn" style="padding:7px 9px;font-size:10px" onclick="showAllNodes()">Show hidden</button>`:''}
+  </div>
+  ${!filtered.length?`<div class="empty-state"><div class="empty-title">${nodeQuery?'No matching nodes':'No nodes yet'}</div></div>`
+  :`<div class="nlist">${filtered.map(n=>{
     const isH=hidden.has(n.id),isP=pathSet.has(n.id);
     const c=AC[n.data.nodeType]||AC.module;
     const tagCls=n.data.nodeType==='module'?'ntag-m':n.data.nodeType==='subroutine'?'ntag-s':'ntag-e';
@@ -1043,8 +1423,9 @@ ${!filtered.length?`<p style="color:var(--muted);font-size:12px;margin-top:6px">
       ${isP?`<span class="ntag ntag-p">path</span>`:isH?`<span class="ntag ntag-h">hidden</span>`:`<span class="ntag ${tagCls}">${n.data.nodeType[0].toUpperCase()}</span>`}
       <button class="hbtn" title="${isH?'Show':'Hide'} (Cmd+H)" onclick="event.stopPropagation();toggleHide('${n.id}')">${isH?'👁':'⊘'}</button>
     </div>`;
-  }).join('')}
-${state.customNodes.length?`<button class="btn btn-danger btn-full" style="margin-top:10px" onclick="clearAll()">Clear all nodes</button>`:''}`;
+  }).join('')}</div>`}
+</section>
+${state.customNodes.length?`<section class="panel-section"><button class="btn btn-danger btn-full" onclick="clearAll()">Clear all nodes</button></section>`:''}`;
 }
 
 function selectNodeById(id){
@@ -1055,6 +1436,10 @@ function selectNodeById(id){
   selectedId=id; applyHighlight();
   const el=cy.getElementById(id);
   if(el.length) cy.animate({center:{eles:el},zoom:Math.max(cy.zoom(),0.9)},{duration:400});
+  if (isMobileLayout()) {
+    activeTab='inspect';
+    toggleSidebar(true);
+  }
   renderSidebar();
 }
 function toggleHide(id){
@@ -1064,10 +1449,10 @@ function toggleHide(id){
   if(pathSet.has(id)){pathSet.delete(id);applyHighlight();}
 }
 function showAllNodes(){applyState({hiddenNodeIds:[]});}
-function clearAll(){if(!confirm('Clear all nodes and edges?'))return;applyState({customNodes:[],customEdges:[],nodePositions:{},hiddenNodeIds:[]});selectedId=null;pathSet.clear();}
+function clearAll(){if(!confirm('Clear all nodes and edges?'))return;applyState({customNodes:[],customEdges:[],nodePositions:{},hiddenNodeIds:[]});selectedId=null;pathSet.clear();activeTab='build';}
 
-// ── Detail tab ────────────────────────────────────────────────────────────────
-function renderDetailTab(){
+// ── Inspect tab ──────────────────────────────────────────────────────────────
+function renderInspectTab(){
   const hidden=new Set(state.hiddenNodeIds);
   const node=selectedId?state.customNodes.find(n=>n.id===selectedId):null;
   const isH=selectedId?hidden.has(selectedId):false;
@@ -1078,21 +1463,15 @@ function renderDetailTab(){
   const AC={module:isDark?'#60a5fa':'#2563eb',subroutine:isDark?'#a78bfa':'#7c3aed',external:isDark?'#f472b6':'#db2777'};
   const ABG={module:isDark?'rgba(96,165,250,.16)':'rgba(37,99,235,.10)',subroutine:isDark?'rgba(167,139,250,.16)':'rgba(124,58,237,.10)',external:isDark?'rgba(244,114,182,.16)':'rgba(219,39,119,.10)'};
 
-  let html=`<button class="btn btn-full" onclick="toggleFocusMode()" style="margin-bottom:10px">
-    <strong>${state.focusMode?'Disable focus mode':'Enable focus mode'}</strong>
-    <span style="display:block;color:var(--muted);font-size:11px;margin-top:2px">${state.focusMode?'Restore overlays.':'Hide legend, toolbar, and theme button.'}</span>
-  </button>`;
+  let html=``;
 
   if(pathMode){
-    html+=`<div class="path-banner">Path mode ON · ${pathSet.size} node(s) selected.<br>Click nodes on the canvas to add/remove them. Edges between selected nodes are highlighted.</div>
-    <div class="row">
-      <button class="btn" style="flex:1" onclick="clearPath()">Clear path</button>
-      <button class="btn" style="flex:1" onclick="togglePathMode()">Exit path mode</button>
-    </div>`;
+    html+=`<section class="panel-section"><div class="path-banner">Path mode ON · ${pathSet.size} node(s) selected.</div>
+    <div class="row"><button class="btn" style="flex:1" onclick="clearPath()">Clear path</button><button class="btn" style="flex:1" onclick="togglePathMode()">Exit path mode</button></div></section>`;
   }
 
   if(!node){
-    html+=`<p style="color:var(--muted);font-size:12px">${pathMode?'':'Click a node to inspect it.'}</p>`;
+    html+=`<section class="panel-section"><div class="empty-state"><div class="empty-title">${pathMode?'Path mode is active':'Nothing selected'}</div></div></section>`;
   } else {
     const ts=AC[node.data.nodeType]||AC.module;
     const tsBg=ABG[node.data.nodeType]||ABG.module;
@@ -1101,12 +1480,22 @@ function renderDetailTab(){
     const incoming=state.customEdges.filter(e=>e.target===selectedId);
     const deg=outgoing.length+incoming.length;
 
-    html+=`${isH?`<div class="hbanner">Hidden from canvas.</div>`:''}
+    html+=`<section class="panel-section">
+${isH?`<div class="hbanner">Hidden from canvas.</div>`:''}
+<div class="status-strip">
+  <div class="status-chip">${label}</div>
+  <div class="status-chip">${isH?'Hidden':'Visible'}</div>
+  ${isP?`<div class="status-chip">In path</div>`:''}
+</div>
 <div class="dcard">
   <span class="dbadge" style="color:${ts};background:${tsBg}">${label}</span>
   <h3 class="dtitle">${typeIcon(node.data.nodeType)} ${esc(node.data.title)}</h3>
-  <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Degree: ${deg}</div>
-  ${node.data.parentName?`<div style="font-size:11px;color:var(--muted)">⊂ ${esc(node.data.parentName)}</div>`:''}
+  <div class="detail-meta">
+    <div class="detail-stat"><div class="detail-stat-label">Degree</div><div class="detail-stat-value">${deg}</div></div>
+    <div class="detail-stat"><div class="detail-stat-label">Outgoing</div><div class="detail-stat-value">${outgoing.length}</div></div>
+    <div class="detail-stat"><div class="detail-stat-label">Incoming</div><div class="detail-stat-value">${incoming.length}</div></div>
+    <div class="detail-stat"><div class="detail-stat-label">Parent</div><div class="detail-stat-value">${node.data.parentName?esc(node.data.parentName):'—'}</div></div>
+  </div>
   ${outgoing.length?`<div class="dblock"><p class="dlbl">Uses →</p><div class="chips">
     ${outgoing.map(e=>{const t=state.customNodes.find(n=>n.id===e.target);if(!t)return'';const tc=AC[t.data.nodeType]||AC.module;const tbg=ABG[t.data.nodeType]||ABG.module;return`<span class="chip" style="background:${tbg};color:${tc}" onclick="selectNodeById('${t.id}')">${typeIcon(t.data.nodeType)} ${esc(t.data.title)}</span>`;}).join('')}
   </div></div>`:''}
@@ -1123,23 +1512,29 @@ function renderDetailTab(){
 <div class="nshell">
   <div class="nhead">
     <strong>Notes${nodeNote.trim()?'<span class="saved-badge">saved</span>':''}</strong>
-    <button class="btn" style="font-size:10px;padding:3px 9px" onclick="clearNotes()">Clear</button>
+    <button class="btn nclear" onclick="clearNotes()">Clear</button>
   </div>
-  <label class="lbl" style="margin-top:0">Note for this node</label>
-  <input class="fi" id="nn" value="${esc(nodeNote)}" placeholder="Short note…" oninput="updateNodeNote(this.value)"/>
-  <label class="lbl">Global notes</label>
-  <textarea class="fi" id="gn" placeholder="General codebase notes…" oninput="updateGlobalNote(this.value)">${esc(globalNote)}</textarea>
+  <div class="nfields">
+    <div class="nfield">
+      <label class="lbl" for="nn">Note for this node</label>
+      <input class="fi" id="nn" value="${esc(nodeNote)}" placeholder="Short note…" oninput="updateNodeNote(this.value)"/>
+    </div>
+    <div class="nfield">
+      <label class="lbl" for="gn">Global notes</label>
+      <textarea class="fi" id="gn" placeholder="General codebase notes…" oninput="updateGlobalNote(this.value)">${esc(globalNote)}</textarea>
+    </div>
+  </div>
   <p class="nhelp">Stored in localStorage · shortcuts: Del=delete, Cmd+H=hide, Esc=deselect</p>
-</div>`;
+</div></section>`;
   }
 
   const visible=state.customNodes.filter(n=>!hidden.has(n.id));
   if(visible.length){
-    html+=`<p class="lbl">Quick Jump</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    html+=`<section class="panel-section"><div class="section-head"><div class="section-title">Quick jump</div></div><div class="quick-grid">
     ${visible.slice(0,12).map(n=>`<button class="btn" style="text-align:left;font-size:11px;padding:6px 9px" onclick="selectNodeById('${n.id}')">
-      <strong style="display:block;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${typeIcon(n.data.nodeType)} ${esc(n.data.title)}</strong>
-      <span style="color:var(--muted);font-size:10px">${n.data.nodeType}</span>
-    </button>`).join('')}</div>`;
+      <strong style="display:block;font-size:11px;line-height:1.35;white-space:normal;overflow-wrap:anywhere;word-break:break-word">${typeIcon(n.data.nodeType)} ${esc(n.data.title)}</strong>
+      <span style="color:var(--muted);font-size:10px;display:block;margin-top:3px;white-space:normal;overflow-wrap:anywhere">${n.data.nodeType}</span>
+    </button>`).join('')}</div></section>`;
   }
   return html;
 }
@@ -1163,57 +1558,72 @@ function updateGlobalNote(v){state.global=v;saveState();}
 function clearNotes(){state.perNode={};state.global='';saveState();renderSidebar();}
 function toggleFocusMode(){
   state.focusMode=!state.focusMode;saveState();
-  const show=!state.focusMode;
-  ['toolbar','legend'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display=show?'':'none';});
-  document.getElementById('theme-btn').style.display=show?'':'none';
+  if (state.focusMode) toggleSidebarCollapsed(true);
   renderSidebar();
+  applySidebarCollapsed();
+}
+function togglePerformanceMode(){
+  state.performanceMode=!state.performanceMode;
+  saveState();
+  cy.style(buildCyStyle());
+  applyHighlight();
+  renderAppChrome();
+  renderToolbar();
+}
+
+function setZoomLevel(v) {
+  if (!cy) return;
+  const level = Math.max(cy.minZoom(), Math.min(cy.maxZoom(), v));
+  cy.zoom({
+    level,
+    renderedPosition: { x: cy.width() / 2, y: cy.height() / 2 }
+  });
+  const out = document.getElementById('zoom-value');
+  const slider = document.getElementById('zoom-slider');
+  if (slider) slider.value = level.toFixed(2);
+  if (out) out.textContent = level.toFixed(2) + '×';
+}
+
+function syncZoomUi() {
+  if (!cy) return;
+  const level = cy.zoom();
+  const slider = document.getElementById('zoom-slider');
+  const out = document.getElementById('zoom-value');
+  if (slider) slider.value = level.toFixed(2);
+  if (out) out.textContent = level.toFixed(2) + '×';
 }
 
 // ── Toolbar ───────────────────────────────────────────────────────────────────
-let dashedMode=true;
 function renderToolbar(){
   const tb=document.getElementById('toolbar');
-  tb.style.display=state.focusMode?'none':'';
   tb.innerHTML=`
-<div class="layout-group">
-  <div class="layout-group-title">Layout</div>
-  <div class="layout-row">
+<button class="sidebar-toggle-inline" id="sidebar-toggle" type="button" onclick="toggleSidebarCollapsed()" aria-label="${sidebarCollapsed ? 'Expand inspector' : 'Collapse inspector'}">${sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}</button>
+<div class="collapsed-hint">Expand sidebar for Build/Browse/Inspect options.</div>
+<div class="rail-panel">
+  <div class="rail-title">Layout</div>
+  <div class="toolbar-grid">
     <button class="lbtn" onclick="runLayout('dagre-lr')">Dagre LR</button>
     <button class="lbtn" onclick="runLayout('dagre-tb')">Dagre TB</button>
-  </div>
-  <div class="layout-row">
     <button class="lbtn" onclick="runLayout('cose')">Force</button>
     <button class="lbtn" onclick="runLayout('breadth')">Breadth</button>
-  </div>
-  <div class="layout-row">
     <button class="lbtn" onclick="runLayout('circle')">Circle</button>
     <button class="lbtn" onclick="runLayout('concentric')">Concentric</button>
   </div>
-  <div class="layout-row">
-    <button class="lbtn" onclick="runLayout('grid')" style="flex:none;width:100%">Grid</button>
+  <div class="toolbar-grid" style="margin-top:6px">
+    <button class="lbtn" onclick="runLayout('grid')">Grid</button>
+    <button class="lbtn" onclick="cy.fit(undefined,40)">Fit view</button>
   </div>
 </div>
-<div class="layout-group">
-  <div class="layout-group-title">Text size</div>
-  <div style="display:flex;align-items:center;gap:8px;padding:2px 0">
-    <input type="range" min="0.7" max="2.2" step="0.1"
-      value="${(state.textScale||1.0).toFixed(1)}"
-      style="flex:1;accent-color:var(--cyan);height:4px;cursor:pointer"
-      oninput="setTextScale(parseFloat(this.value));document.getElementById('ts-val').textContent=parseFloat(this.value).toFixed(1)+'×'"/>
-    <span id="ts-val" style="font-size:10px;color:var(--muted);min-width:28px">${(state.textScale||1.0).toFixed(1)}×</span>
-  </div>
-</div>
-<button class="tbtn" onclick="cy.fit(undefined,40)"><strong>Fit view</strong><span>Zoom to all nodes</span></button>
-<button class="tbtn${pathMode?' path-on':''}" onclick="togglePathMode()"><strong>${pathMode?'Exit path mode':'Path select mode'}</strong><span>${pathMode?pathSet.size+' node(s) in path':'Click nodes to trace a workflow path'}</span></button>
-<button class="tbtn${dashedMode?' on':''}" onclick="dashedMode=!dashedMode;renderToolbar()"><strong>${dashedMode?'Dashed':'Solid'} connect</strong><span>Edge style for new edges</span></button>
-<button class="tbtn" onclick="undo()" ${!undoStack.length?'disabled':''}><strong>Undo</strong><span>Cmd/Ctrl+Z</span></button>
-<button class="tbtn" onclick="redo()" ${!redoStack.length?'disabled':''}><strong>Redo</strong><span>Shift+Cmd/Ctrl+Z</span></button>`;
+`;
 }
 
 function setTextScale(v) {
   state.textScale = Math.round(v * 10) / 10;
   saveState();
+  cy.style(buildCyStyle());
   syncGraph(); // re-computes fontSize for all nodes
+  const out = document.getElementById('text-scale-value');
+  if (out) out.textContent = state.textScale.toFixed(1) + '×';
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -1221,10 +1631,11 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 function showMsg(id,text,ok=false){const el=document.getElementById(id);if(el)el.innerHTML=`<div class="msg${ok?' ok':''}">${esc(text)}</div>`;}
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
+sidebarOpen = !isMobileLayout();
+sidebarCollapsed = Boolean(state.focusMode) && !isMobileLayout();
 applyTheme(theme);
-syncGraph();
-renderSidebar();
-if(state.focusMode){['toolbar','legend','theme-btn'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});}
+toggleSidebar(false);
+applySidebarCollapsed();
 setTimeout(()=>cy.fit(undefined,40),200);
 </script>
 </body>

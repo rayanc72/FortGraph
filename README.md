@@ -32,6 +32,7 @@ The Python parser has no third-party dependencies, and the viewer does not requi
 - Supports additive JSON import.
 - Provides multiple graph layouts.
 - Supports node search, hiding, notes, path highlighting, undo/redo, and JSON/DOT export.
+- Includes an optional Performance mode for large graphs, with a simplified monochrome view and faster interaction.
 - Runs locally so source code does not need to be uploaded to a remote service.
 
 ## Repository layout
@@ -73,18 +74,37 @@ click on the panels to zoom.
 <table>
   <tr>
     <td align="center"><strong>Explore details and add notes</strong></td>
-    <td align="center"><strong>Hide nodes</strong></td>
+    <td align="center"><strong>Browse</strong></td>
   </tr>
   <tr>
     <td>
-      <a href="assets/explore_details.png">
-      <img src="assets/explore_details.png"
+      <a href="assets/inspect_and_note.png">
+      <img src="assets/inspect_and_note.png"
            alt="Details and Note">
     </td>
     <td>
-      <a href="assets/hide_nodes.png">
-      <img src="assets/hide_nodes.png"
-           alt="Hide or delete nodes">
+      <a href="assets/browse.png">
+      <img src="assets/browse.png"
+           alt="Browse modules and subroutines">
+    </td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td align="center"><strong>Minimal display</strong></td>
+    <td align="center"><strong>Focus mode</strong></td>
+  </tr>
+  <tr>
+    <td>
+      <a href="assets/minimal_dark.png">
+      <img src="assets/minimal_dark.png"
+           alt="Dark Performance mode">
+    </td>
+    <td>
+      <a href="assets/minimal_light_w_focus.png">
+      <img src="assets/minimal_light_w_focus.png"
+           alt="Light Performance mode">
     </td>
   </tr>
 </table>
@@ -93,8 +113,7 @@ click on the panels to zoom.
 
 ### Python parser
 
-- Python 3.9 or newer
-- No third-party Python packages
+- Python 3.7+
 
 ### HTML viewer
 
