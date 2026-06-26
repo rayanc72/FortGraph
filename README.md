@@ -131,9 +131,8 @@ click on the panels to zoom.
 
 Open `FortGraph.html` in a browser. 
 
-- The interface allows manual addition of modules and subroutines and graph export in JSON format. See the below section "Using the interactive viewer" for a more complete listing of its capabilities.
-
-- For complex modules, you may want to use the following Python-based dependency generation workflow.
+- The interface allows manual parsing of modules and subroutines and graph export in JSON format. 
+- For large modules and files, you may want to use the following Python-based dependency generation workflow.
 
 ### 2. Generate a dependency graph
 
