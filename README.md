@@ -33,27 +33,10 @@ The Python parser has no third-party dependencies, and the viewer does not requi
 - Provides multiple graph layouts.
 - Supports node search, hiding, notes, path highlighting, undo/redo, and JSON/DOT export.
 - Parses pasted `USE` blocks in the viewer, including `USE ... ONLY:` statements, multiline continuations, and inline-comment stripping.
-- Lets you resize the right sidebar to make long module and subroutine names easier to inspect.
 - Shows detailed incoming and outgoing relationship labels in the **Inspect** tab, including `USE` and `ONLY:` edges in Minimal mode.
 - Allows the Quick Jump list to be customized by adding or removing nodes while preserving the automatic default behavior.
-- Includes an optional Performance mode for large graphs, with a simplified monochrome view and faster interaction.
-- Runs locally so source code does not need to be uploaded to a remote service.
+- Includes an optional Minimal mode for large graphs, with a simplified monochrome view and faster interaction.
 
-## Repository layout
-
-```text
-FortGraph/
-├── FortGraph.html
-├── fortran_to_workflow.py
-├── README.md
-├── assets
-└── examples/
-    └── basic/
-        ├── README.md
-        ├── sample_project.f90
-        ├── sample_project.json
-        └── fortgraph.schema.json
-```
 ## Screenshots
 click on the panels to zoom.
 <table>
@@ -140,8 +123,7 @@ click on the panels to zoom.
 
 ### HTML viewer
 
-- A modern desktop browser
-- Internet access may be required if the HTML loads Cytoscape, Dagre, or fonts from external CDNs
+- A desktop browser
 
 ## Quick start
 
@@ -201,12 +183,6 @@ python3 fortran_to_workflow.py src/*.f90 -o project.json
 ### Parse a directory
 
 ```bash
-python3 fortran_to_workflow.py src --recursive -o project.json
-```
-
-The short form is:
-
-```bash
 python3 fortran_to_workflow.py src -r -o project.json
 ```
 
@@ -246,19 +222,9 @@ python3 fortran_to_workflow.py src -r \
   -o project.json
 ```
 
-This option may produce false positives.
-
-### Change JSON indentation
-
-```bash
-python3 fortran_to_workflow.py src -r \
-  --indent 4 \
-  -o project.json
-```
-
 ## Supported source extensions
 
-FortGraph recognizes the following common Fortran extensions:
+The parser recognizes the following common Fortran extensions:
 
 ```text
 .f
@@ -299,76 +265,7 @@ Functions and programs currently use the `subroutine` visual category so they ca
 | `FUNC name` | A likely function reference detected with `--infer-functions` |
 | `in` | A symbol is associated with an imported module |
 
-## JSON format
 
-A FortGraph JSON file has the following top-level structure:
-
-```json
-{
-  "version": 2,
-  "nodes": [],
-  "edges": []
-}
-```
-
-### Node object
-
-```json
-{
-  "id": "n-00001",
-  "type": "module",
-  "title": "math_utils",
-  "parentId": null,
-  "parentName": null,
-  "position": {
-    "x": 120,
-    "y": 120
-  }
-}
-```
-
-Required node fields:
-
-- `id`
-- `type`
-- `title`
-
-Optional node fields:
-
-- `parentId`
-- `parentName`
-- `position`
-
-### Edge object
-
-```json
-{
-  "id": "e-00001",
-  "source": "n-00001",
-  "target": "n-00002",
-  "label": "contains",
-  "type": "contains"
-}
-```
-
-Required edge fields:
-
-- `source`
-- `target`
-
-Recommended edge fields:
-
-- `id`
-- `label`
-- `type`
-
-The `source` and `target` values must reference valid node IDs.
-
-A formal JSON Schema is provided in:
-
-```text
-examples/basic/fortgraph.schema.json
-```
 
 ## Example
 
@@ -387,141 +284,6 @@ python3 fortran_to_workflow.py \
 ```
 
 Then open `FortGraph.html` and import the generated JSON.
-
-## Using the interactive viewer
-
-### Build tab
-
-Use the **Build** tab to:
-
-- add modules manually,
-- add subroutines manually,
-- parse pasted `USE` statements, including `USE ... ONLY:` imports,
-- handle multiline `USE` statements with continuation markers and ignore inline `!` comments,
-- import JSON,
-- export JSON,
-- export DOT,
-- clear cached graph data.
-
-### Browse tab
-
-Use the **Browse** tab to:
-
-- search nodes,
-- select a node,
-- hide or restore nodes,
-- identify modules, procedures, and external references.
-
-### Inspect tab
-
-Use the **Inspect** tab to:
-
-- inspect incoming and outgoing dependencies,
-- view relationship labels such as `USE`, `ONLY: symbol`, and containment links even in Minimal mode,
-- rename nodes,
-- hide or delete nodes,
-- add or remove the selected node from the Quick Jump list,
-- reset a customized Quick Jump list back to the automatic default,
-- add per-node notes,
-- add global notes,
-- enable focus mode.
-
-### Sidebar sizing
-
-On desktop, the right sidebar can be resized by dragging its left-edge handle. This is useful when working with long module or subroutine names that would otherwise wrap or truncate in the **Browse**, **Inspect**, or **Quick Jump** sections.
-
-### Layouts
-
-FortGraph supports several Cytoscape layouts:
-
-- Dagre left-to-right
-- Dagre top-to-bottom
-- Force-directed
-- Breadth-first
-- Circle
-- Concentric
-- Grid
-
-For graphs containing cycles, force-directed, circle, or concentric layouts may be easier to interpret than Dagre.
-
-### Path selection
-
-Path-selection mode lets you select several nodes and highlight edges between them.
-
-### Local storage
-
-The viewer stores the following data in browser local storage:
-
-- graph state,
-- node positions,
-- notes,
-- hidden nodes,
-- theme,
-- display settings.
-
-Clearing browser storage or changing browser profiles will remove that state. Export the graph as JSON when you need a portable copy.
-
-## Additive JSON import
-
-Imported JSON is merged with the current graph.
-
-FortGraph:
-
-- preserves existing nodes and edges,
-- matches nodes by case-insensitive title,
-- adds previously unseen nodes,
-- remaps imported edge endpoints,
-- skips duplicate edges with the same source, target, and label,
-- adjusts conflicting IDs,
-- offsets imported positions to reduce overlap.
-
-Because matching is case-insensitive, `solver_mod` and `SOLVER_MOD` are treated as the same node during import.
-
-## Circular dependencies
-
-The parser and viewer allow circular dependencies.
-
-For example:
-
-```text
-procedure_a → procedure_b
-procedure_b → procedure_a
-```
-
-Cycles are preserved in the JSON and displayed in the graph.
-
-FortGraph does not currently:
-
-- reject cycles,
-- classify strongly connected components,
-- specially color circular dependencies,
-- issue cycle warnings.
-
-## Parsing limitations
-
-FortGraph uses a lightweight parser rather than a complete Fortran compiler frontend.
-
-Known limitations include:
-
-- Preprocessor branches are not evaluated.
-- Generic interfaces may not resolve to a specific implementation.
-- Procedure bindings may not resolve completely.
-- Function-call inference is heuristic.
-- Calls through procedure pointers may not resolve.
-- Type-bound procedure calls may not resolve completely.
-- Renamed imports are simplified to their remote symbol.
-- Include files are not expanded automatically.
-- Conditional compilation may produce inactive dependencies.
-- Procedures with identical names in different scopes may be merged.
-
-For compiler-grade semantic analysis, a full Fortran parser or compiler frontend would be required.
-
-
-## Privacy
-
-The Python parser runs locally.
-
-The HTML viewer processes imported JSON locally in the browser and does not require a backend service.
 
 ## License
 
